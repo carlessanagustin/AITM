@@ -11,4 +11,4 @@ Este curso incluye prácticas de iniciación a los siguientes softwares:
 
 Para las prácticas es necesario de algunos requisitos prévios que se encuentran [aquí](pre-pre-requisitos)
 
-Creado por carlessanagustin.com
+Creado por [carlessanagustin.com](http://www.carlessanagustin.com)

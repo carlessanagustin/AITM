@@ -27,7 +27,7 @@ $ vagrant box add base ../ubuntu-trusty-64-base.box
 
 * Iniciar las máquinas virtuales
 
-````
+```
 $ vagrant up
 ```
 
@@ -49,4 +49,4 @@ $ vagrant package --output ../ubuntu-trusty-64-zape.box zape
 $ vagrant package --output ../ubuntu-trusty-64-base.box base
 ```
 
-Creado por carlessanagustin.com
+Creado por [carlessanagustin.com](http://www.carlessanagustin.com)
