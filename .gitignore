@@ -2,5 +2,7 @@ template.md
 *-brainstorm.md
 
 
+htpasswd.users
+*.box
 .DS_Store
 .vagrant
