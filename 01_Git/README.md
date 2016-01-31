@@ -7,4 +7,8 @@
 
 ## Ejercicio
 
-* Realizar los ejercicios con el profesor - http://try.github.io
+* Realizar los siguientes ejercicios - http://try.github.io
+
+# Preguntas y respuestas
+
+Creado por carlessanagustin.com
