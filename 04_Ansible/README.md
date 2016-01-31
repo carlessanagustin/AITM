@@ -1,4 +1,4 @@
-# Práctica de Git
+# Práctica de Ansible
 
 ## Requisitos previos: Entorno local
 
@@ -6,22 +6,31 @@
 
 NOTA: Windows no es compatible como máquina de control
 
-## 1. 
+* Abrir Git Bash (Windows) o Terminal (Linux/MacOSX)
+* Iniciamos máquinas virtuales
 
-ansible
-ansible-doc
-ansible-galaxy
-ansible-playbook
-ansible-pull
-ansible-vault
+```
+$ vagrant up zipi zape
+```
+
+## Comandos Ansible
 
 ```
 $ ansible <host-pattern> [options]
+$ ansible-playbook playbook.yml
+```
+
+```
 $ ansible-doc [options] [module...]
 $ ansible-galaxy [init|info|install|list|remove] [--help] [options] ...
-$ ansible-playbook playbook.yml
 $ ansible-pull [options] [playbook.yml]
 $ ansible-vault [create|decrypt|edit|encrypt|rekey|view] [--help] [options] file_name
 ```
 
 https://github.com/ansible/ansible/blob/devel/examples/ansible.cfg
+
+
+
+# Preguntas y respuestas
+
+Creado por carlessanagustin.com

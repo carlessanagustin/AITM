@@ -15,8 +15,7 @@ Hay que revisar los permisos de escritura en carpeta del usuario activo.
 
 ## 1. Los comandos básicos
 
-* Windows: Abrir Git Bash
-* Linux/MacOSX: Abrir terminal
+* Abrir Git Bash (Windows) o Terminal (Linux/MacOSX)
 
 ```
 $ mkdir aitm-vagrant
@@ -138,7 +137,7 @@ $ ls extra
 
 * ¿Que sucede?
 
-* Otros proveedores: VMware, Docker, Hyper-V & Custom Provider
+*A fecha de Enero del 2016 también: VMware, Docker, Hyper-V & Custom Provider.*
 (fuente: https://www.vagrantup.com/docs/providers/)
 
 ## 4. Aprovisionamiento
@@ -214,6 +213,9 @@ config.vm.provision "ansible" do |ansible|
   ansible.playbook = "provisioning/playbook.yml"
 end
 ```
+
+*A fecha de Enero del 2016 también: File, Shell, Ansible, Ansible Local, CFEngine, Chef Solo, Chef Zero, Chef Client, Chef Apply, Docker, Puppet Apply, Puppet Agent, Salt.*
+(fuente: https://www.vagrantup.com/docs/provisioning/)
 
 ## 5. Reenvío de puertos
 
