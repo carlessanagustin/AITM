@@ -9,7 +9,7 @@ wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | apt-key add -
 sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
 
 apt-get update
-apt-get -y upgrade
+#apt-get -y upgrade
 
 # language settings
 apt-get -y install language-pack-en
@@ -71,6 +71,8 @@ service nagios-nrpe-server start
 
 # add to default runlevels
 update-rc.d nagios-nrpe-server defaults
+
+service nagios-nrpe-server restart
 
 # clean up
 apt-get -y autoremove

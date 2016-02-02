@@ -4,7 +4,7 @@
 
 # upgrading system
 apt-get update
-apt-get -y upgrade
+#apt-get -y upgrade
 
 # language settings
 apt-get -y install language-pack-en
@@ -50,6 +50,9 @@ usermod -a -G nagios www-data
 # add to default runlevels
 update-rc.d apache2 defaults
 update-rc.d nagios3 defaults
+
+service apache2 restart
+service nagios3 restart
 
 # clean up
 apt-get -y autoremove

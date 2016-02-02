@@ -3,12 +3,15 @@
 
 Vagrant.configure("2") do |config|
  
-  config.vm.provider "virtualbox"
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = 512
+    vb.cpus = 1
+  end
   config.vm.boot_timeout = 60
  
   config.vm.define "zipi" do |zipi|
     zipi.vm.host_name = "zipi"
-    zipi.vm.box = "baseUPC"
+    zipi.vm.box = "base"
     zipi.vm.provision :shell, :path => "vagrant-bootstrap-zipi.sh"
     zipi.vm.network "private_network", ip: "192.168.32.10", virtualbox__intnet: true, auto_config: true
     zipi.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
@@ -17,11 +20,19 @@ Vagrant.configure("2") do |config|
     
   config.vm.define "zape" do |zape|
     zape.vm.host_name = "zape"
-    zape.vm.box = "baseUPC"
+    zape.vm.box = "base"
     zape.vm.provision :shell, :path => "vagrant-bootstrap-zape.sh"
     zape.vm.network "private_network", ip: "192.168.32.11", virtualbox__intnet: true, auto_config: true
     zape.vm.network "forwarded_port", guest: 80, host: 8082, auto_correct: true
     zape.vm.network "forwarded_port", guest: 8080, host: 8083, auto_correct: true
   end
+    
+  config.vm.define "base" do |base|
+    base.vm.host_name = "base"
+    base.vm.box = "ubuntu/trusty64"
+    base.vm.provision :shell, :inline => "apt-get update && apt-get -y upgrade"
+    base.vm.network "private_network", ip: "192.168.32.12", virtualbox__intnet: true, auto_config: true
+    base.vm.network "forwarded_port", guest: 80, host: 8082, auto_correct: true
+    base.vm.network "forwarded_port", guest: 8080, host: 8083, auto_correct: true
+  end
 end
- 

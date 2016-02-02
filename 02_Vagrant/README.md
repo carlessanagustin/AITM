@@ -28,9 +28,9 @@ $ vagrant up
 * Continuamos...
 
 ```
-$ vagrant box add baseUPC ../../base-ubuntu-trusty-64.box
+$ vagrant box add base ../../base-ubuntu-trusty-64.box
 $ vagrant box list
-$ vagrant init baseUPC -f
+$ vagrant init base -f
 $ vagrant up
 ```
 
@@ -76,7 +76,7 @@ $ vim Vagrantfile
 
 ```ruby
 Vagrant.configure(2) do |config|
-  config.vm.box = "baseUPC"
+  config.vm.box = "base"
 end
 ```
 
@@ -285,7 +285,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     zipi.vm.provision :shell, :path => "bootstrap.sh"
 ##### PROVISION #####
     zipi.vm.host_name = "zipi"
-    zipi.vm.box = "baseUPC"
+    zipi.vm.box = "base"
     zipi.vm.provider "virtualbox" do |vb|
       vb.memory = 512
       vb.cpus = 1
@@ -301,7 +301,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     zape.vm.provision :shell, :inline => "apt-get update && apt-get -y install curl"
 ##### PROVISION #####
     zape.vm.host_name = "zape"
-    zape.vm.box = "baseUPC"
+    zape.vm.box = "base"
     zape.vm.provider "virtualbox" do |vb|
       vb.memory = 512
       vb.cpus = 1
@@ -335,7 +335,7 @@ $ vagrant ssh zape
 ```
 ~$ exit
 $ vagrant destroy -f
-$ vagrant box remove baseUPC
+$ vagrant box remove base
 ```
 
 # Preguntas y respuestas
