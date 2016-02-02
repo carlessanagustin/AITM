@@ -1,5 +1,9 @@
 # Práctica de Git
 
+Vamos a conocer GIT para el control de versiones de nuestros ficheros - http://git-scm.com/
+
+Sigue las instrucciones paso a paso con la ayuda del instructor.
+
 ## Requisitos previos: Entorno local
 
 * Instalar Git - https://git-scm.com/

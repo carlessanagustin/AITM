@@ -1,5 +1,9 @@
 # Práctica de Ansible
 
+Vamos a conocer ANSIBLE; herramienta para el despliegue de aplicaciones y gestión de la configuración - http://www.ansible.com/
+
+Sigue las instrucciones paso a paso con la ayuda del instructor. Las prácticas de realizarán en una máquina Ubuntu de Vagrant.
+
 ## Requisitos previos: Entorno local
 
 * Instalar Ansible - http://docs.ansible.com/ansible/intro_installation.html

@@ -1,5 +1,9 @@
 # Práctica de Vagrant
 
+Vamos a conocer VAGRANT para la creación y configuración de entornos de desarrollo virtualizados - https://www.vagrantup.com/
+
+Sigue las instrucciones paso a paso con la ayuda del instructor.
+
 ## Requisitos previos: Entorno local
 
 * Instalar VirtualBox - https://www.virtualbox.org/

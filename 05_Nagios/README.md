@@ -1,5 +1,9 @@
 # Práctica de Nagios
 
+Vamos a conocer NAGIOS, el sistema de monitorización - http://www.nagios.org/
+
+Sigue las instrucciones paso a paso con la ayuda del instructor.
+
 ## Monitorizar un host
 
 * Abrimos la carpeta **etc-nagios3** en un editor (Brackets, Sublime Text, Notepad++, ...)
