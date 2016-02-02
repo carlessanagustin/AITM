@@ -25,7 +25,7 @@ service jenkins start
 apt-get -y install nginx
 rm /etc/nginx/sites-enabled/default
 # change location if needed
-cp /vagrant/jenkins-nginx /etc/nginx/sites-available/jenkins
+cp /vagrant/jenkins-nginx.txt /etc/nginx/sites-available/jenkins
 sudo ln -s /etc/nginx/sites-available/jenkins /etc/nginx/sites-enabled/
 service nginx restart
 
