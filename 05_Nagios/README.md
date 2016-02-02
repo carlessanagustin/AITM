@@ -183,39 +183,58 @@ check_users -w <users> -c <users>
 
 ## Habilitando la ejecución remota
 
+* En **zape**:
 
-TODO: carles
+```
+~$ /usr/lib/nagios/plugins/check_nrpe
+```
 
+* ¿Que sucede?
+* Introducimos en /etc/nagios3/conf.d/AITM/zape.cfg ...
 
+```
+define service {
+    use                  generic-service
+    host_name            zape.AITM-UPC.cat
+    service_description  LOAD
+    check_command        check_nrpe!check_load
+}
+```
 
+```
+~$ /usr/lib/nagios/plugins/check_nrpe -H 192.168.32.10 -c check_load
+```
 
+* ¿Que sucede?
 
+* En **zipi**:
 
-----
- @ zape.terminal: sudo service nagios-nrpe-server status
- @ zipi.terminal: /usr/lib/nagios/plugins/check_nrpe
- @ zipi.edit: Introducimos en etc-nagios3/conf.d/AITM/zape.cfg ...
-    define service {
-        use                  generic-service
-        host_name            zape.AITM-UPC.cat
-        service_description  LOAD
-        check_command        check_nrpe!check_load
-    }
-  @zape.terminal: Editamos /etc/nagios/nrpe.cfg
- >> Añadir: allowed_hosts=127.0.0.1, 192.168.32.0/24
- >> Buscar y revisar: command[check_users] ...
- @zape.terminal: sudo service nagios-nrpe-server start
- @zape.terminal: /usr/lib/nagios/plugins/check_load localhost
- @zipi.terminal: /usr/lib/nagios/plugins/check_nrpe -H 192.168.32.11 -c check_load
- Abrir: http://exchange.nagios.org/directory/Plugins
- Abrir: https://www.digitalocean.com/community/tutorials/how-to-create-nagios-plugins-with-bash-on-ubuntu-12-10
+```
+~$ vim /etc/nagios/nrpe.cfg
+```
 
-----
+* Añadimos...
 
+```
+allowed_hosts=127.0.0.1, 192.168.32.0/24
+```
 
+* Buscar y revisar: command[check_users] ...
 
+```
+~$ sudo su -
+~$ service nagios-nrpe-server start
+~$ /usr/lib/nagios/plugins/check_load localhost
+```
 
+* En **zape**:
 
+```
+~$ /usr/lib/nagios/plugins/check_nrpe -H 192.168.32.10 -c check_load
+```
+
+* ¿Que sucede?
+* Abrirmos https://www.digitalocean.com/community/tutorials/how-to-create-nagios-plugins-with-bash-on-ubuntu-12-10
 
 # Preguntas y respuestas
 
