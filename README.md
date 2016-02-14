@@ -7,8 +7,10 @@ Este curso incluye prácticas de iniciación a los siguientes softwares:
 * [Jenkins](03_Jenkins)
 * [Ansible](04_Ansible)
 * [Nagios](05_Nagios)
-* [???](06_???)
+* [Docker](06_Docker)
 
 Para las prácticas es necesario de algunos requisitos prévios que se encuentran [aquí](pre-pre-requisitos)
+
+---
 
 Creado por [carlessanagustin.com](http://www.carlessanagustin.com)
