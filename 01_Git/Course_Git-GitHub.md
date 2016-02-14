@@ -254,6 +254,8 @@ pdf slides (03-git_course-GitHub)
     $ git stash list
     $ git stash pop
     $ git stash drop
+    
+> Utilizar git stash cuando se quiere registrar el estado actual del directorio de trabajo y el índice, pero se quiere volver a un directorio de trabajo limpio. El comando guarda sus modificaciones locales y vuelve el directorio de trabajo para que coincida con HEAD cometió.
 
 ### Create Your Own SSH Keys
 
