@@ -1,9 +1,3 @@
-* Salvamos y salimos con *:x*
-* Ejecutamos...
-* ¿Que sucede?
-
----
-
 # Práctica de Docker
 
 Vamos a conocer DOCKER; Docker permite empaquetar una aplicación con todas sus dependencias en una unidad estandarizada para el desarrollo de software. - https://www.docker.com/
