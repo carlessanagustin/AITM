@@ -72,7 +72,7 @@ $ sudo su -
 * Activar: Security Realm > Jenkins’ own user database
 * Activar: Security Realm > Allow users to sign up
 * Activar: Authorization > Project-based Matrix Authorization Strategy
-* User/group to add: carles
+* User/group to add: your_name
 * Select All
 * Save
 * Sign up
@@ -100,7 +100,6 @@ $ sudo su -
 * Instalar plugin: Build Pipeline
 * Instalar plugin: Python Wrapper
 * Instalar plugin: Python
-* Instalar plugin: pyenv
 * Instalar plugin: ShiningPanda
 * Instalar plugin: Cobertura
 * Instalar plugin: SLOCCount
@@ -159,8 +158,7 @@ $ sudo su -
 * Apply
 * Build Now
 * Console Output
-* Test Result: Explanation
-* No Tags: Explanation
+* Test Result
 
 ## Job: Gráficas
 
