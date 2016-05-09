@@ -16,7 +16,7 @@ apt-get -y install linux-image-extra-$(uname -r) apparmor
 apt-get -y install docker-engine
 
 service docker start
-systemctl enable docker
+update-rc.d docker defaults
 
 groupadd docker
 usermod -aG docker vagrant
