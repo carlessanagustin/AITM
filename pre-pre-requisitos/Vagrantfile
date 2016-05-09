@@ -12,7 +12,8 @@ Vagrant.configure("2") do |config|
   config.vm.define "base" do |base|
     base.vm.host_name = "base"
     base.vm.box = "ubuntu/trusty64"
-    base.vm.provision :shell, :inline => "apt-get update && apt-get -y upgrade"
+    #base.vm.provision :shell, :inline => "apt-get update && apt-get -y upgrade"
+    base.vm.provision :shell, :path => "vagrant-bootstrap-base.sh"
     base.vm.network "private_network", ip: "192.168.32.12", virtualbox__intnet: true, auto_config: true
     base.vm.network "forwarded_port", guest: 80, host: 8084, auto_correct: true
     base.vm.network "forwarded_port", guest: 8080, host: 8085, auto_correct: true
