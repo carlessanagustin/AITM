@@ -53,7 +53,7 @@ service nginx restart
 
 # upgrading system
 apt-get update
-apt-get -y upgrade
+#apt-get -y upgrade
 
 # language settings
 locale-gen UTF-8
@@ -76,7 +76,3 @@ service nagios-nrpe-server restart
 
 # clean up
 apt-get -y autoremove
-
-
-
-

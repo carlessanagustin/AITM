@@ -33,20 +33,38 @@ $ vagrant up
 
 ## Opción 2: Generación de los entornos
 
-* Para generar de nuevo este entorno solo debemos hacer:
+* Para generar los entornos debemos crear la imagen base:
 
 ```
-$ cd pre-pre-requisitos
-$ vagrant up --provision
+cd pre-pre-requisitos
+vagrant up base --provision
+vagrant halt
+vagrant package --output ../../ubuntu-trusty-64-base.box base
+vagrant box add base ../../ubuntu-trusty-64-base.box
 ```
 
-* Una vez ya esten listas las máquinas virtuales, las podemos cerrar y exportar:
+* Una vez creada la 1a màquina virtual base, pasamos a crear los entornos de trabajo:
 
 ```
-$ vagrant halt
-$ vagrant package --output ../ubuntu-trusty-64-zipi.box zipi
-$ vagrant package --output ../ubuntu-trusty-64-zape.box zape
-$ vagrant package --output ../ubuntu-trusty-64-base.box base
+vagrant up zipi zape --provision
 ```
+
+* Una vez creados, podemos pasar a exportar los ficheros box:
+
+```
+vagrant halt
+vagrant package --output ../../ubuntu-trusty-64-zipi.box zipi
+vagrant package --output ../../ubuntu-trusty-64-zape.box zape
+```
+
+# Acceso a Jenkins
+
+Podemos encontrar la contraseña del usuario *admin* en:
+
+```
+$ more /var/lib/jenkins/secrets/initialAdminPassword
+```
+
+---
 
 Creado por [carlessanagustin.com](http://www.carlessanagustin.com)

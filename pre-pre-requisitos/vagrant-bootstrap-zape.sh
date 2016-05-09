@@ -21,7 +21,7 @@ PASS="nagios123"
 
 # upgrading system
 apt-get update
-apt-get -y upgrade
+#apt-get -y upgrade
 
 # language settings
 locale-gen UTF-8
@@ -49,7 +49,9 @@ usermod -a -G nagios www-data
 
 # add to default runlevels
 update-rc.d apache2 defaults
+update-rc.d apache2 enable 2
 update-rc.d nagios3 defaults
+update-rc.d nagios3 enable 2
 
 service apache2 restart
 service nagios3 restart
@@ -70,7 +72,7 @@ apt-add-repository -y ppa:ansible/ansible
 
 # upgrading system
 apt-get update
-apt-get -y upgrade
+#apt-get -y upgrade
 
 # language settings
 apt-get -y install language-pack-en
@@ -96,6 +98,3 @@ pip install pywinrm
 # config.vm.network "forwarded_port", guest: 8010, host: 8081
 # 2. then provision:
 # $ vagrant up --provision
-
-
-
