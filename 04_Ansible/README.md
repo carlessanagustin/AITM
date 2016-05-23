@@ -15,8 +15,8 @@ NOTA: Windows no es compatible como máquina de control
 
 ## "hello world"
 
-```bash
-vagrant up zape zipi
+```shell
+vagrant up
 vagrant ssh zape
 cd /vagrant
 mkdir -p ansible/hosts && cd ansible
@@ -39,7 +39,7 @@ vim hosts/all
 * Salvamos y salimos con *:x*
 * Ejecutamos...
 
-```
+```shell
 ansible localhost -i hosts/all -m ping
 ansible zape -i hosts/all -m ping -k
 ```
@@ -47,9 +47,9 @@ ansible zape -i hosts/all -m ping -k
 * Introducimos la contraseña del usuario vagrant que es *vagrant*.
 * ¿Que sucede?
 
-## Inventario
+## Inventario (opcional)
 
-```
+```shell
 vim hosts/all
 ```
 
@@ -76,7 +76,7 @@ zape
 
 * Salvamos y salimos con *:x*
 
-```
+```shell
 ansible all -i hosts/all -m setup --tree /tmp/facts -k
 ```
 
@@ -89,7 +89,7 @@ ansible all -i hosts/all -m setup --tree /tmp/facts -k
 
 * Abrimos un navegador y vamos a https://github.com/ansible/ansible/blob/devel/examples/ansible.cfg
 
-```
+```shell
 wget https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg
 vim ansible.cfg
 ```
@@ -121,7 +121,7 @@ gathering = smart
 
 ### Consultas
 
-```
+```shell
 vim request.yml
 ```
 
@@ -148,13 +148,13 @@ vim request.yml
 
 * Ejecutamos
 
-```
+```shell
 ansible-playbook request.yml -i hosts/all --list-tasks --list-hosts
 ```
 
 * ¿Que sucede?
 
-```
+```shell
 ansible-playbook request.yml -i hosts/all -k
 ```
 
@@ -163,7 +163,7 @@ ansible-playbook request.yml -i hosts/all -k
 
 ### Aprovisionamiento
 
-```
+```shell
 vim install.yml
 ```
 
@@ -185,7 +185,7 @@ vim install.yml
 
 * Ejecutamos
 
-```
+```shell
 ansible-playbook install.yml -i hosts/all -k
 ```
 
@@ -193,7 +193,7 @@ ansible-playbook install.yml -i hosts/all -k
 * ¿Que sucede?
 
 
-```
+```shell
 vim install.yml
 ```
 
@@ -233,7 +233,7 @@ vim install.yml
 
 * Salvamos y salimos con *:x*
 
-```
+```shell
 vim index.html.j2
 ```
 
@@ -263,7 +263,7 @@ vim index.html.j2
 * Salvamos y salimos con *:x*
 * Ejecutamos...
 
-```
+```shell
 ansible-playbook install.yml -i hosts/all -k
 ```
 
@@ -273,7 +273,7 @@ ansible-playbook install.yml -i hosts/all -k
 
 ## Roles
 
-```
+```shell
 mkdir roles && cd roles
 ansible-galaxy init nginx
 tree nginx
@@ -281,7 +281,7 @@ tree nginx
 
 * ¿Que sucede?
 
-```
+```shell
 vim nginx/tasks/main.yml
 ```
 
@@ -333,7 +333,7 @@ demo: Ansible
 
 * Salvamos y salimos con *:x*
 
-```
+```shell
 cp ../index.html.j2 nginx/templates/
 vim ../install2.yml
 ```
@@ -359,14 +359,14 @@ ansible-playbook install2.yml -i hosts/all -k
 
 * Los ya conocidos...
 
-```
+```shell
 ansible <host-pattern> [options]
 ansible-playbook playbook.yml
 ```
 
 * Otros comandos incluidos en la instalación...
 
-```
+```shell
 ansible-doc [options] [module...]
 ansible-galaxy [init|info|install|list|remove] [--help] [options] ...
 ansible-pull [options] [playbook.yml]
@@ -374,6 +374,12 @@ ansible-vault [create|decrypt|edit|encrypt|rekey|view] [--help] [options] file_n
 ```
 
 # Preguntas y respuestas
+
+# Eliminamos las instancias Vagrant
+
+```
+vagrant destroy -f
+```
 
 ------
 

@@ -314,6 +314,12 @@ password: jenkins123
 
 # Preguntas y respuestas
 
+# Eliminamos las instancias Vagrant
+
+```
+vagrant destroy -f
+```
+
 ---
 
 Creado por [carlessanagustin.com](http://www.carlessanagustin.com)

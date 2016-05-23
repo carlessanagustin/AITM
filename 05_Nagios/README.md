@@ -242,6 +242,14 @@ service nagios-nrpe-server start
 
 # Preguntas y respuestas
 
+# Eliminamos las instancias Vagrant
+
+```
+vagrant destroy -f
+```
+
+---
+
 # Solución de problemas
 
 * Problema: No sucede nada accediendo a http://localhost:8082/nagios3/

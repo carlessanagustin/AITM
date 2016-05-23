@@ -12,9 +12,8 @@ Sigue las instrucciones paso a paso con la ayuda del instructor. Las prácticas 
 * Iniciamos máquina virtual:
 
 ```shell
-$ cd /carpeta/de/trabajo
-$ vagrant up zipi
-$ vagrant ssh zipi
+vagrant up zipi
+vagrant ssh zipi
 ```
 
 * Abrimos otro terminal siguiendo los pasos anteriores hasta obtener algo similar:
@@ -32,7 +31,7 @@ T2$ docker ps -a
 ## "hello world"
 
 ```shell
-$ sudo docker run hello-world
+sudo docker run hello-world
 ```
 
 * ¿Que sucede?
@@ -69,13 +68,13 @@ T2$ docker ps
 * ¿Que sucede?
 
 ```shell
-$ docker inspect $c_id
-$ docker inspect --format '{{.NetworkSettings.IPAddress}}' $c_id
-$ docker_hostname=$(docker inspect --format '{{.HostnamePath}}' $c_id)
-$ echo $docker_hostname
-$ sudo more $docker_folder
-$ echo $c_id
-$ docker stop $c_id
+docker inspect $c_id
+docker inspect --format '{{.NetworkSettings.IPAddress}}' $c_id
+docker_hostname=$(docker inspect --format '{{.HostnamePath}}' $c_id)
+echo $docker_hostname
+sudo more $docker_folder
+echo $c_id
+docker stop $c_id
 ```
 
 * ¿Que sucede?
@@ -90,7 +89,7 @@ T2$ docker ps -aq
 * ¿Que sucede?
 
 ```shell
-$ docker rm $(docker ps -aq)
+docker rm $(docker ps -aq)
 ```
 
 * ¿Que sucede?
@@ -102,8 +101,8 @@ Compondremos un servidor de aplicaciones Python/Flask con una base de datos Redi
 ### Preparación del entorno (ya realizado por el instructor)
 
 ```shell
-$ docker pull redis
-$ docker pull python:2.7
+docker pull redis
+docker pull python:2.7
 ```
 
 ## Ficheros de configuración
@@ -111,8 +110,8 @@ $ docker pull python:2.7
 * El script de Docker Compose:
 
 ```shell
-$ cd /carpeta/de/trabajo/
-$ vim docker-compose.yml
+cd /carpeta/de/trabajo/
+vim docker-compose.yml
 ```
 
 * Añadimos...
@@ -151,7 +150,7 @@ RUN pip install -r requirements.txt
 * Código Python sobre entorno de Flask con conexión a Redis:
 
 ```shell
-$ vim app.py
+vim app.py
 ```
 
 * Añadimos...
@@ -176,7 +175,7 @@ if __name__ == "__main__":
 * Los requerimientos mínimos de Python
 
 ```shell
-$ vim requirements.txt
+vim requirements.txt
 ```
 
 * Añadimos...
@@ -205,7 +204,7 @@ $ curl localhost:5000
 * ¿Que sucede?
 
 ```shell
-$ docker-compose stop
+docker-compose stop
 ```
 
 * ¿Que sucede?
@@ -217,8 +216,8 @@ Compondremos varios servidores de aplicación Tomcat con balanceador de carga Ng
 ### Preparación del entorno (ya realizado por el instructor)
 
 ```shell
-$ docker pull tomcat
-$ docker pull nginx
+docker pull tomcat
+docker pull nginx
 ```
 
 ## Ficheros de configuración
@@ -226,7 +225,7 @@ $ docker pull nginx
 * Configuración del balanceo con Nginx:
 
 ```shell
-$ vim nginx.conf
+vim nginx.conf
 ```
 
 * Añadimos...
@@ -285,7 +284,7 @@ http {
 * El script de Docker Compose para Tomcat con Nginx:
 
 ```shell
-$ vim compose-tomcat.yml
+vim compose-tomcat.yml
 ```
 
 * Añadimos...
@@ -319,7 +318,7 @@ tomcatapp3:
 * Descargamos el fichero WAR de muestra
 
 ```shell
-$ wget https://github.com/carlessanagustin/DockerDo/raw/master/08_Compose/sample.war
+wget https://github.com/carlessanagustin/DockerDo/raw/master/08_Compose/sample.war
 ```
 
 ## Pasamos a la acción
@@ -338,11 +337,17 @@ $ curl http://localhost/sample/
 
 * ¿Que sucede?
 
-## Limpiamos en entorno
+# Limpiamos en entorno
 
 ```
-$ docker-compose stop
-$ docker-compose rm
+docker-compose stop
+docker-compose rm
+```
+
+# Eliminamos las instancias Vagrant
+
+```
+vagrant destroy -f
 ```
 
 ---
