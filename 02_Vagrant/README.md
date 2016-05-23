@@ -22,43 +22,46 @@ Hay que revisar los permisos de escritura en carpeta del usuario activo.
 * Abrir Git Bash (Windows) o Terminal (Linux/MacOSX)
 
 ```
-$ mkdir aitm-vagrant
-$ cd aitm-vagrant
-$ vagrant init
-$ vagrant up
+mkdir aitm-vagrant
+cd aitm-vagrant
+vagrant init
+vagrant up
 ```
 
 * ¿Que sucede?
 * Continuamos...
 
 ```
-$ vagrant box add base ../../base-ubuntu-trusty-64.box
-$ vagrant box list
-$ vagrant init base -f
-$ vagrant up
+vagrant box add base ../../base-ubuntu-trusty-64.box
+vagrant box list
+vagrant init base -f
+vagrant up
 ```
 
 * ¿Que sucede?
 * También podemos usar estos comandos
 
 ```
-$ vagrant init ubuntu/trusty64 -m -o Vagrantfile-trusty64
-$ vagrant init precise32 http://files.vagrantup.com/precise32.box -m -o Vagrantfile-precise
+vagrant init ubuntu/trusty64 -m -o Vagrantfile-trusty64
+vagrant init precise32 http://files.vagrantup.com/precise32.box -m -o Vagrantfile-precise
 ```
 
 * Aparte de *up* existen otros
 
 ```
-$ vagrant up|suspend|resume|halt|reload
+vagrant up|suspend|resume|halt|reload
 ```
 
 * Continuamos...
 
 ```
-$ vagrant ssh
-~$ uname -a
-~$ exit
-$ vagrant ssh -c "uname -a"
+vagrant ssh
+    uname -a
+    exit
+```
+
+```
+vagrant ssh -c "uname -a"
 ```
 
 * ¿Que sucede?
@@ -66,14 +69,14 @@ $ vagrant ssh -c "uname -a"
 ## 2. El fichero Vagrantfile
 
 ```
-$ vagrant ssh -c "ifconfig"
+vagrant ssh -c "ifconfig"
 ```
 
 * ¿Que sucede?
 * Editamos el fichero *Vagrantfile*
 
 ```
-$ vim Vagrantfile
+vim Vagrantfile
 ```
 
 * ¿Que sucede?
@@ -96,8 +99,8 @@ config.vm.network :private_network,
 * Salvamos y salimos con *:x*
 
 ```
-$ vagrant reload
-$ vagrant ssh -c "ifconfig"
+vagrant reload
+vagrant ssh -c "ifconfig"
 ```
 
 * ¿Que sucede?
@@ -105,8 +108,8 @@ $ vagrant ssh -c "ifconfig"
 ## 3. Más opciones para Vagrantfile
 
 ```
-$ mkdir extra
-$ vim Vagrantfile
+mkdir extra
+vim Vagrantfile
 ```
 
 * Añadimos...
@@ -127,16 +130,16 @@ config.vm.synced_folder "./extra",
 * Salvamos y salimos con *:x*
 
 ```
-$ vagrant reload
-$ vagrant ssh
-~$ hostname
-~$ free
-~$ ls /
-~$ ls /vagrant
-~$ touch /vagrant-extra/extra-file.txt
-~$ exit
-$ ls
-$ ls extra
+vagrant reload
+vagrant ssh
+    hostname
+    free
+    ls /
+    ls /vagrant
+    touch /vagrant-extra/extra-file.txt
+    exit
+ls
+ls extra
 ```
 
 * ¿Que sucede?
@@ -149,7 +152,7 @@ $ ls extra
 * Editamos el fichero *Vagrantfile*
 
 ```
-$ vim Vagrantfile
+vim Vagrantfile
 ```
 
 * Añadimos...
@@ -160,22 +163,22 @@ config.vm.provision :shell, :inline => "apt-get update && apt-get -y install apa
 * Salvamos y salimos con *:x*
 
 ```
-$ vagrant provision
+vagrant provision
 ```
 
 * ¿Que sucede?
 * Aparte de *provision* podemos...
 
 ```
-$ vagrant up --provision
-$ vagrant up --no-provision
-$ vagrant reload --provision
+vagrant up --provision
+vagrant up --no-provision
+vagrant reload --provision
 ```
 
 * Editamos el fichero *Vagrantfile*
 
 ```
-$ vim Vagrantfile
+vim Vagrantfile
 ```
 * Intercambiamos *config.vm.provision :shell...* por
 
@@ -187,7 +190,7 @@ config.vm.provision :shell, :path => "bootstrap.sh"
 * Editamos el fichero *bootstrap.sh*
 
 ```
-$ vim bootstrap.sh
+vim bootstrap.sh
 ```
 
 * Añadimos...
@@ -201,7 +204,7 @@ apt-get -y install apache2
 * Salvamos y salimos con *:x*
 
 ```
-$ vagrant provision
+vagrant provision
 ```
 
 * ¿Que sucede?
@@ -230,7 +233,7 @@ En el paso anterior hemos instalado el servidor web Apache. Vamos a ver su homep
 * Editamos el fichero *Vagrantfile*
 
 ```
-$ vim Vagrantfile
+vim Vagrantfile
 ```
 
 * Añadimos...
@@ -245,7 +248,7 @@ config.vm.network "forwarded_port",
 * Salvamos y salimos con *:x*
 
 ```
-$ vagrant reload
+vagrant reload
 ```
 
 * Abrimos un navegador y vamos a http://localhost:8080
@@ -257,9 +260,9 @@ $ vagrant reload
 * Continuamos en el Terminal
 
 ```
-$ vagrant destroy -f
-$ rm -Rf .vagrant
-$ vagrant box list
+vagrant destroy -f
+rm -Rf .vagrant
+vagrant box list
 ```
 
 * ¿Que sucede?
@@ -267,14 +270,14 @@ $ vagrant box list
 * Otros comandos útiles
 
 ```
-$ vagrant box remove|update [name]
+vagrant box remove|update [name]
 ```
 
 ## 7. Iniciando más instancias
 
 ```
-$ mv Vagrantfile Vagrantfile-single
-$ vim Vagrantfile
+mv Vagrantfile Vagrantfile-single
+vim Vagrantfile
 ```
 
 * Añadimos...
@@ -299,7 +302,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     zipi.vm.network "private_network", ip: "192.168.32.10", virtualbox__intnet: true, auto_config: true
 ##### NETWORK #####
   end
-    
+
   config.vm.define "zape" do |zape|
 ##### PROVISION #####
     zape.vm.provision :shell, :inline => "apt-get update && apt-get -y install curl"
@@ -321,14 +324,14 @@ end
 * Salvamos y salimos con *:x*
 
 ```
-$ vagrant up --provision
+vagrant up --provision
 ```
 
 * ¿Que sucede?
 
 ```
-$ vagrant ssh zape
-~$ curl http://192.168.32.10
+vagrant ssh zape
+    curl http://192.168.32.10
 ```
 
 * Abrimos un navegador y vamos a http://localhost:8080/
@@ -337,9 +340,9 @@ $ vagrant ssh zape
 ## Eliminamos nuestro rastro
 
 ```
-~$ exit
-$ vagrant destroy -f
-$ vagrant box remove base
+    exit
+vagrant destroy -f
+vagrant box remove base
 ```
 
 # Preguntas y respuestas

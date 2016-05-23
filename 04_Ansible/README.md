@@ -16,11 +16,11 @@ NOTA: Windows no es compatible como máquina de control
 ## "hello world"
 
 ```bash
-$ vagrant up zape zipi
-$ vagrant ssh zape
-~$ cd /vagrant
-~$ mkdir -p ansible/hosts && cd ansible
-~$ vim hosts/all
+vagrant up zape zipi
+vagrant ssh zape
+cd /vagrant
+mkdir -p ansible/hosts && cd ansible
+vim hosts/all
 ```
 
 * Añadimos...
@@ -40,8 +40,8 @@ $ vagrant ssh zape
 * Ejecutamos...
 
 ```
-~$ ansible localhost -i hosts/all -m ping
-~$ ansible zape -i hosts/all -m ping -k
+ansible localhost -i hosts/all -m ping
+ansible zape -i hosts/all -m ping -k
 ```
 
 * Introducimos la contraseña del usuario vagrant que es *vagrant*.
@@ -50,7 +50,7 @@ $ vagrant ssh zape
 ## Inventario
 
 ```
-~$ vim hosts/all
+vim hosts/all
 ```
 
 * Actualizamos...
@@ -77,7 +77,7 @@ zape
 * Salvamos y salimos con *:x*
 
 ```
-~$ ansible all -i hosts/all -m setup --tree /tmp/facts -k
+ansible all -i hosts/all -m setup --tree /tmp/facts -k
 ```
 
 * Introducimos la contraseña del usuario vagrant que es *vagrant*.
@@ -90,8 +90,8 @@ zape
 * Abrimos un navegador y vamos a https://github.com/ansible/ansible/blob/devel/examples/ansible.cfg
 
 ```
-~$ wget https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg
-~$ vim ansible.cfg
+wget https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg
+vim ansible.cfg
 ```
 
 * Aseguramos que tenemos la siguiente configuración
@@ -122,7 +122,7 @@ gathering = smart
 ### Consultas
 
 ```
-~$ vim request.yml
+vim request.yml
 ```
 
 * Introducimos el siguiente texto
@@ -138,7 +138,7 @@ gathering = smart
       debug: var=info
     - name: imprimir campo de variable
       debug: var=info.stdout
-      
+
     - name: como te llamas?
       command: hostname
       register: info
@@ -149,13 +149,13 @@ gathering = smart
 * Ejecutamos
 
 ```
-~$ ansible-playbook request.yml -i hosts/all --list-tasks --list-hosts
+ansible-playbook request.yml -i hosts/all --list-tasks --list-hosts
 ```
 
 * ¿Que sucede?
 
 ```
-~$ ansible-playbook request.yml -i hosts/all -k
+ansible-playbook request.yml -i hosts/all -k
 ```
 
 * ¿Que sucede?
@@ -164,7 +164,7 @@ gathering = smart
 ### Aprovisionamiento
 
 ```
-~$ vim install.yml
+vim install.yml
 ```
 
 * Introducimos el siguiente texto
@@ -176,7 +176,7 @@ gathering = smart
     - name: instalamos nginx
       become: true
       apt: name={{ package }} state=latest update_cache=yes cache_valid_time=3600
-      
+
   vars:
     package: nginx
 
@@ -186,7 +186,7 @@ gathering = smart
 * Ejecutamos
 
 ```
-~$ ansible-playbook install.yml -i hosts/all -k
+ansible-playbook install.yml -i hosts/all -k
 ```
 
 * Abrimos un navegador y vamos a http://localhost:8080/
@@ -194,7 +194,7 @@ gathering = smart
 
 
 ```
-~$ vim install.yml
+vim install.yml
 ```
 
 * Introducimos el siguiente texto
@@ -213,14 +213,14 @@ gathering = smart
     - name: despliegue de la aplicacion
       become: true
       template: src={{ template_name }} dest={{ destination }} owner=root group=root mode=0644 backup=yes
-      
+
     - name: ls /usr/share/nginx/html/
       command: ls /usr/share/nginx/html/
       register: contents
-      
+
     - name: mostrar variable
       debug: var=contents.stdout_lines
-      
+
   vars:
     package: nginx
     template_name: "index.html.j2"
@@ -234,7 +234,7 @@ gathering = smart
 * Salvamos y salimos con *:x*
 
 ```
-~$ vim index.html.j2
+vim index.html.j2
 ```
 
 * Introducimos el siguiente texto
@@ -264,7 +264,7 @@ gathering = smart
 * Ejecutamos...
 
 ```
-~$ ansible-playbook install.yml -i hosts/all -k
+ansible-playbook install.yml -i hosts/all -k
 ```
 
 * ¿Que sucede?
@@ -274,15 +274,15 @@ gathering = smart
 ## Roles
 
 ```
-~$ mkdir roles && cd roles
-~$ ansible-galaxy init nginx
-~$ tree nginx
+mkdir roles && cd roles
+ansible-galaxy init nginx
+tree nginx
 ```
 
 * ¿Que sucede?
 
 ```
-~$ vim nginx/tasks/main.yml
+vim nginx/tasks/main.yml
 ```
 
 * Introducimos el siguiente texto
@@ -300,11 +300,11 @@ gathering = smart
 - name: despliegue de la aplicacion
   become: true
   template: src={{ template_name }} dest={{ destination }} owner=root group=root mode=0644 backup=yes
-  
+
 - name: ls /usr/share/nginx/html/
   command: ls /usr/share/nginx/html/
   register: contents
-  
+
 - name: mostrar variable
   debug: var=contents.stdout_lines      
 ```
@@ -312,7 +312,7 @@ gathering = smart
 * Salvamos y salimos con *:x*
 
 ```
-~$ vim nginx/defaults/main.yml
+vim nginx/defaults/main.yml
 ```
 
 * Introducimos el siguiente texto
@@ -334,8 +334,8 @@ demo: Ansible
 * Salvamos y salimos con *:x*
 
 ```
-~$ cp ../index.html.j2 nginx/templates/
-~$ vim ../install2.yml
+cp ../index.html.j2 nginx/templates/
+vim ../install2.yml
 ```
 
 * Introducimos el siguiente texto
@@ -351,8 +351,8 @@ demo: Ansible
 * Salvamos y salimos con *:x*
 
 ```
-~$ cd ..
-~$ ansible-playbook install2.yml -i hosts/all -k
+cd ..
+ansible-playbook install2.yml -i hosts/all -k
 ```
 
 ## Comandos
@@ -360,17 +360,17 @@ demo: Ansible
 * Los ya conocidos...
 
 ```
-~$ ansible <host-pattern> [options]
-~$ ansible-playbook playbook.yml
+ansible <host-pattern> [options]
+ansible-playbook playbook.yml
 ```
 
 * Otros comandos incluidos en la instalación...
 
 ```
-~$ ansible-doc [options] [module...]
-~$ ansible-galaxy [init|info|install|list|remove] [--help] [options] ...
-~$ ansible-pull [options] [playbook.yml]
-~$ ansible-vault [create|decrypt|edit|encrypt|rekey|view] [--help] [options] file_name
+ansible-doc [options] [module...]
+ansible-galaxy [init|info|install|list|remove] [--help] [options] ...
+ansible-pull [options] [playbook.yml]
+ansible-vault [create|decrypt|edit|encrypt|rekey|view] [--help] [options] file_name
 ```
 
 # Preguntas y respuestas
@@ -382,7 +382,7 @@ demo: Ansible
 ## Generar claves de autenticación de SSH
 
 ```
-~$ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 Generating public/private rsa key pair.
 Enter file in which to save the key (/home/vagrant/.ssh/id_rsa): /home/vagrant/.ssh/id_rsa_ansible
 Enter passphrase (empty for no passphrase):
@@ -403,8 +403,7 @@ The key's randomart image is:
 |          + . . o|
 |         +.   .o |
 +-----------------+
-~$ ssh-copy-id -i /home/vagrant/.ssh/id_rsa_ansible.pub vagrant@192.168.32.11
+ssh-copy-id -i /home/vagrant/.ssh/id_rsa_ansible.pub vagrant@192.168.32.11
 ```
 
 Creado por [carlessanagustin.com](http://www.carlessanagustin.com)
-

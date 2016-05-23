@@ -18,33 +18,33 @@ Sigue las instrucciones paso a paso con la ayuda del instructor.
 ## Configuración general
 
 ```
-$ git config --global user.name "name surname"
-$ git config --global user.email email@example.com
-$ git config --list
+git config --global user.name "name surname"
+git config --global user.email email@example.com
+git config --list
 ```
 
 ## Crear proyecto
 
 ```
-$ mkdir temp
-$ cd temp
-$ git init
+mkdir temp
+cd temp
+git init
 ```
 
 ## Ver estado
 
 ```
-$ git status
-$ git log
-$ git diff
-$ .gitignore
+git status
+git log
+git diff
+.gitignore
 ```
- 
- 
+
+
 ## Descargar proyecto
 
 ```
-$ git clone <URL.git>
+git clone <URL.git>
 ```
 
 ## Instantáneas
@@ -52,30 +52,30 @@ $ git clone <URL.git>
 (snapshots o compromiso)
 
 ```
-$ git add .
-$ git commit -m "<message>"
+git add .
+git commit -m "<message>"
 ```
 
 ## Compartir proyectos (colaborar)
 
 ```
-$ git pull <remote_alias> <branch_name>
-$ git remote add <remote_alias> <url>
+git pull <remote_alias> <branch_name>
+git remote add <remote_alias> <url>
 (remote_alias == origin)
-$ git remote -v
-$ git push -u <remote_alias> <branch_name>
+git remote -v
+git push -u <remote_alias> <branch_name>
 (remote_alias == origin)
-$ git push -u origin --all
-$ git push -u origin --tags
+git push -u origin --all
+git push -u origin --tags
 ```
 
 ## Ramas
 
 ```
-$ git branch <branch_name>
-$ git checkout <branch_destination>
-$ git merge <branch_origen>
-$ git diff <branch_destination>..<branch_origen>
+git branch <branch_name>
+git checkout <branch_destination>
+git merge <branch_origen>
+git diff <branch_destination>..<branch_origen>
 ```
 
 ## Vocabulario básico
@@ -98,11 +98,11 @@ $ git diff <branch_destination>..<branch_origen>
 ## Etiquetas
 
 ```
-$ git tag -a v1.4 -m 'my version 1.4'
-$ git tag
-$ git show v1.4
-$ git log --pretty=oneline
-$ git tag -a v1.2 9fceb02
+git tag -a v1.4 -m 'my version 1.4'
+git tag
+git show v1.4
+git log --pretty=oneline
+git tag -a v1.2 9fceb02
 ```
 
 # Preguntas y respuestas
@@ -112,12 +112,12 @@ $ git tag -a v1.2 9fceb02
 # Conexión remota (seguridad)
 
 ```
-$ ssh-keygen
-$ ssh-agent /bin/bash
-$ ps -e  | grep [s]sh-agent
-$ ssh-add ~/.ssh/id_rsa
-$ ssh-add -l
-$ cat ~/.ssh/id_rsa.pub
+ssh-keygen
+ssh-agent /bin/bash
+ps -e  | grep [s]sh-agent
+ssh-add ~/.ssh/id_rsa
+ssh-add -l
+cat ~/.ssh/id_rsa.pub
 ```
 
 ---

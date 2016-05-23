@@ -9,7 +9,15 @@ Este curso incluye prácticas de iniciación a los siguientes softwares:
 * [Nagios](05_Nagios)
 * [Docker](06_Docker)
 
-Para las prácticas es necesario de algunos requisitos prévios que se encuentran [aquí](pre-pre-requisitos)
+## Requisitos previos
+
+Para las prácticas es necesario de algunos requisitos prévios que se encuentran [aquí](pre-requisitos)
+
+## Infraestructura
+
+Esta es la infraestructura de practicas diseñada:
+
+![Entorno de prácticas](./pre-requisitos/vagrant_environment.png)
 
 ---
 

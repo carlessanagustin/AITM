@@ -11,18 +11,18 @@ Sigue las instrucciones paso a paso con la ayuda del instructor.
 * ¿Que sucede?
 * Abrir Git Bash (Windows) o Terminal (Linux/MacOSX)
 
-```
-$ vagrant up
-$ vagrant ssh zape
-~$ sudo su -
-~$ cd /etc/nagios3
-~$ mkdir -p /etc/nagios3/conf.d/AITM
-~$ vim conf.d/AITM/zape.cfg
+```shell
+vagrant up
+vagrant ssh zape
+sudo su -
+cd /etc/nagios3
+mkdir -p /etc/nagios3/conf.d/AITM
+vim conf.d/AITM/zape.cfg
 ```
 
 * Añadimos...
 
-```
+```shell
 define host {
     host_name               zape.AITM-UPC.cat
     alias                   zape
@@ -39,15 +39,15 @@ define host {
 * Salvamos y salimos con *:x*
 * Ejecutamos...
 
-```
-~$ /usr/sbin/nagios3 -v nagios.cfg
+```shell
+/usr/sbin/nagios3 -v nagios.cfg
 ```
 
 * ¿Que sucede?
 * Ejecutamos...
 
-```
-~$ service nagios3 reload
+```shell
+service nagios3 reload
 ```
 
 * Abrir http://localhost:8082/nagios3/ > Current Status > Hosts
@@ -63,13 +63,13 @@ define host {
 * Abrir http://localhost:8082/nagios3/ > Current Status > Services
 * ¿Que sucede?
 
-```
-~$ vim conf.d/AITM/zape.cfg
+```shell
+vim conf.d/AITM/zape.cfg
 ```
 
 * Añadimos...
 
-```
+```shell
 define service {
     host_name              zape.AITM-UPC.cat
     service_description    HTTP
@@ -104,15 +104,15 @@ define timeperiod {
 * Salvamos y salimos con *:x*
 * Ejecutamos...
 
-```
-~$ /usr/sbin/nagios3 -v nagios.cfg
+```shell
+/usr/sbin/nagios3 -v nagios.cfg
 ```
 
 * ¿Que sucede?
 * Ejecutamos...
 
-```
-~$ service nagios3 reload
+```shell
+service nagios3 reload
 ```
 
 * Abrir http://localhost:8082/nagios3/ > Current Status > Services
@@ -150,36 +150,36 @@ define timeperiod {
 
 * Abrir un nuevo Git Bash (Windows) o Terminal (Linux/MacOSX)
 
-```
-~$ /usr/lib/nagios/plugins/check_http -I 192.168.32.10
-~$ /usr/lib/nagios/plugins/check_http -I 192.168.32.11
-~$ /usr/lib/nagios/plugins/check_http -I 192.168.32.12
+```shell
+/usr/lib/nagios/plugins/check_http -I 192.168.32.10
+/usr/lib/nagios/plugins/check_http -I 192.168.32.11
+/usr/lib/nagios/plugins/check_http -I 192.168.32.12
 ```
 
 * Abrir http://localhost:8082/nagios3/ > Current Status > Services
 * ¿Que sucede?
 
-```
-~$ vim conf.d/localhost_nagios2.cfg
+```shell
+vim conf.d/localhost_nagios2.cfg
 ...
 check_command                   check_users!20!50
 ...
-~$ /usr/lib/nagios/plugins/check_users
+/usr/lib/nagios/plugins/check_users
 Usage:
 check_users -w <users> -c <users>
 ```
 
 * ¿Que sucede?
 
-```
-~$ more /usr/lib/nagios/plugins/check_oracle
-~$ more /usr/lib/nagios/plugins/check_ifstatus
+```shell
+more /usr/lib/nagios/plugins/check_oracle
+more /usr/lib/nagios/plugins/check_ifstatus
 ```
 
 * ¿Que sucede?
 
-```
-~$ ls /usr/lib/nagios/plugins
+```shell
+ls /usr/lib/nagios/plugins
 ```
 
 * Abrimos https://nagios-plugins.org/doc/man/index.html
@@ -189,14 +189,14 @@ check_users -w <users> -c <users>
 
 * En **zape**:
 
-```
-~$ /usr/lib/nagios/plugins/check_nrpe
+```shell
+/usr/lib/nagios/plugins/check_nrpe
 ```
 
 * ¿Que sucede?
 * Introducimos en /etc/nagios3/conf.d/AITM/zape.cfg ...
 
-```
+```shell
 define service {
     use                  generic-service
     host_name            zape.AITM-UPC.cat
@@ -205,36 +205,36 @@ define service {
 }
 ```
 
-```
-~$ /usr/lib/nagios/plugins/check_nrpe -H 192.168.32.10 -c check_load
+```shell
+/usr/lib/nagios/plugins/check_nrpe -H 192.168.32.10 -c check_load
 ```
 
 * ¿Que sucede?
 
 * En **zipi**:
 
-```
-~$ vim /etc/nagios/nrpe.cfg
+```shell
+vim /etc/nagios/nrpe.cfg
 ```
 
 * Añadimos...
 
-```
+```shell
 allowed_hosts=127.0.0.1, 192.168.32.0/24
 ```
 
 * Buscar y revisar: command[check_users] ...
 
-```
-~$ sudo su -
-~$ service nagios-nrpe-server start
-~$ /usr/lib/nagios/plugins/check_load localhost
+```shell
+sudo su -
+service nagios-nrpe-server start
+/usr/lib/nagios/plugins/check_load localhost
 ```
 
 * En **zape**:
 
-```
-~$ /usr/lib/nagios/plugins/check_nrpe -H 192.168.32.10 -c check_load
+```shell
+/usr/lib/nagios/plugins/check_nrpe -H 192.168.32.10 -c check_load
 ```
 
 * ¿Que sucede?
@@ -247,9 +247,9 @@ allowed_hosts=127.0.0.1, 192.168.32.0/24
 * Problema: No sucede nada accediendo a http://localhost:8082/nagios3/
 * Solución:
 
-```
-$ vagrant ssh zape -c "sudo service apache2 restart"
-$ vagrant ssh zape -c "sudo service nagios3 restart"
+```shell
+vagrant ssh zape -c "sudo service apache2 restart"
+vagrant ssh zape -c "sudo service nagios3 restart"
 ```
 
 ------

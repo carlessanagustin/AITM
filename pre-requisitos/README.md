@@ -18,17 +18,17 @@ El profesor ya se ha encargado de actualizar y aprovisionar las máquinas virtua
 * Abrir Git Bash (Windows) o Terminal (Linux/MacOSX)
 
 ```
-$ mkdir working
-$ cd working
-$ vagrant box add zipi ../ubuntu-trusty-64-zipi.box
-$ vagrant box add zape ../ubuntu-trusty-64-zape.box
-$ vagrant box add base ../ubuntu-trusty-64-base.box
+mkdir working
+cd working
+vagrant box add zipi ../ubuntu-trusty-64-zipi.box
+vagrant box add zape ../ubuntu-trusty-64-zape.box
+vagrant box add base ../ubuntu-trusty-64-base.box
 ```
 
 * Iniciar las máquinas virtuales
 
 ```
-$ vagrant up
+vagrant up
 ```
 
 ## Opción 2: Generación de los entornos
@@ -62,7 +62,7 @@ vagrant package --output ../../ubuntu-trusty-64-zape.box zape
 Podemos encontrar la contraseña del usuario *admin* en:
 
 ```
-$ more /var/lib/jenkins/secrets/initialAdminPassword
+more /var/lib/jenkins/secrets/initialAdminPassword
 ```
 
 ---

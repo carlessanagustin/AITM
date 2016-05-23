@@ -7,7 +7,7 @@ Sigue las instrucciones paso a paso con la ayuda del instructor.
 ## Instalación de la VM en Vagrant
 
 ```
-$ vagrant up
+vagrant up
 ```
 * Abrimos el navegador y buscamos http://localhost:8081/
 
@@ -42,17 +42,17 @@ $ vagrant up
 ## Mostrar LOG de Jenkins
 
 ```
-$ vagrant ssh zipi
-$ tail -f /var/log/jenkins/jenkins.log
+vagrant ssh zipi
+tail -f /var/log/jenkins/jenkins.log
 Salir: CTRL+C
 ```
 
 ## Pre-configuración de ThinBackup
 
 ```
-$ sudo su -
-~$ mkdir /backup-jenkins
-~$ chown jenkins:jenkins /backup-jenkins
+sudo su -
+    mkdir /backup-jenkins
+    chown jenkins:jenkins /backup-jenkins
 ```
 
 ## Tour por los plugins instalados
@@ -136,7 +136,7 @@ $ sudo su -
 * Command: bash run_tests.sh
 * Apply
 * Build Now
- 
+
 ## Job: Test avanzado
 
 * taller jenkins git > Configure
@@ -202,7 +202,7 @@ $ sudo su -
 * Apply
 * Build Now
 * Mostrar resultados
- 
+
 ## Configurar un pipeline (cadena de montaje)
 
 * Jenkins > +
@@ -255,9 +255,9 @@ $ sudo su -
 ## Nodes/slaves (2/3) - Configuración mínima del node/slave
 
 ```
-$ vagrant ssh zape
-$ sudo useradd -m -s /bin/bash jenkins
-$ sudo passwd jenkins
+vagrant ssh zape
+sudo useradd -m -s /bin/bash jenkins
+sudo passwd jenkins
 password: jenkins123
 ```
 

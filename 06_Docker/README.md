@@ -11,7 +11,7 @@ Sigue las instrucciones paso a paso con la ayuda del instructor. Las prácticas 
 * Abrir Git Bash (Windows) o Terminal (Linux/MacOSX)
 * Iniciamos máquina virtual:
 
-```bash
+```shell
 $ cd /carpeta/de/trabajo
 $ vagrant up zipi
 $ vagrant ssh zipi
@@ -24,20 +24,20 @@ $ vagrant ssh zipi
 * Usaremos el terminal 1 para trabajar con contenedores Docker.
 * Usaremos el terminal 2 (T2) para monitorizar los containers con los comandos siguientes:
 
-```bash
+```shell
 T2$ docker ps
 T2$ docker ps -a
 ```
 
 ## "hello world"
 
-```bash
+```shell
 $ sudo docker run hello-world
 ```
 
 * ¿Que sucede?
 
-```bash
+```shell
 $ docker run -it busybox
 $ ls
 $ hostname
@@ -52,7 +52,7 @@ $ exit
 
 ## Trabajando con contenedores
 
-```bash
+```shell
 $ c_id=$(docker run --name docker_example -itd busybox)
 $ echo $c_id
 T2$ docker ps
@@ -62,13 +62,13 @@ $ hostname
 
 * Apretamos CTRL+P+Q para volver a la VM de Vagrant (tarda un poco)
 
-```bash
+```shell
 T2$ docker ps
 ```
 
 * ¿Que sucede?
 
-```bash
+```shell
 $ docker inspect $c_id
 $ docker inspect --format '{{.NetworkSettings.IPAddress}}' $c_id
 $ docker_hostname=$(docker inspect --format '{{.HostnamePath}}' $c_id)
@@ -82,14 +82,14 @@ $ docker stop $c_id
 
 ## Limpieza de contenedores
 
-```bash
+```shell
 T2$ docker ps -a
 T2$ docker ps -aq
 ```
 
 * ¿Que sucede?
 
-```bash
+```shell
 $ docker rm $(docker ps -aq)
 ```
 
@@ -101,7 +101,7 @@ Compondremos un servidor de aplicaciones Python/Flask con una base de datos Redi
 
 ### Preparación del entorno (ya realizado por el instructor)
 
-```bash
+```shell
 $ docker pull redis
 $ docker pull python:2.7
 ```
@@ -110,7 +110,7 @@ $ docker pull python:2.7
 
 * El script de Docker Compose:
 
-```bash
+```shell
 $ cd /carpeta/de/trabajo/
 $ vim docker-compose.yml
 ```
@@ -134,7 +134,7 @@ redis:
 * Salvamos y salimos con *:x*
 * El Dockerfile:
 
-```bash
+```shell
 $ vim Dockerfile
 ```
 
@@ -150,7 +150,7 @@ RUN pip install -r requirements.txt
 * Salvamos y salimos con *:x*
 * Código Python sobre entorno de Flask con conexión a Redis:
 
-```bash
+```shell
 $ vim app.py
 ```
 
@@ -175,7 +175,7 @@ if __name__ == "__main__":
 * Salvamos y salimos con *:x*
 * Los requerimientos mínimos de Python
 
-```bash
+```shell
 $ vim requirements.txt
 ```
 
@@ -192,7 +192,7 @@ redis
 
 * Ejecutamos...
 
-```bash
+```shell
 $ docker-compose up -d
 T2$ cd /carpeta/de/trabajo/
 T2$ docker-compose ps
@@ -204,7 +204,7 @@ $ curl localhost:5000
 * Abrimos un navegador y vamos a http://IP_publica_de_la_vm_de_vagrant:5000/
 * ¿Que sucede?
 
-```bash
+```shell
 $ docker-compose stop
 ```
 
@@ -216,7 +216,7 @@ Compondremos varios servidores de aplicación Tomcat con balanceador de carga Ng
 
 ### Preparación del entorno (ya realizado por el instructor)
 
-```bash
+```shell
 $ docker pull tomcat
 $ docker pull nginx
 ```
@@ -225,7 +225,7 @@ $ docker pull nginx
 
 * Configuración del balanceo con Nginx:
 
-```bash
+```shell
 $ vim nginx.conf
 ```
 
@@ -284,7 +284,7 @@ http {
 * Salvamos y salimos con *:x*
 * El script de Docker Compose para Tomcat con Nginx:
 
-```bash
+```shell
 $ vim compose-tomcat.yml
 ```
 
@@ -318,7 +318,7 @@ tomcatapp3:
 * Salvamos y salimos con *:x*
 * Descargamos el fichero WAR de muestra
 
-```bash
+```shell
 $ wget https://github.com/carlessanagustin/DockerDo/raw/master/08_Compose/sample.war
 ```
 
@@ -326,11 +326,11 @@ $ wget https://github.com/carlessanagustin/DockerDo/raw/master/08_Compose/sample
 
 * Ejecutamos...
 
-```bash
+```shell
 $ docker-compose up -d -f compose-tomcat.yml
-T2$ docker-compose ps 
+T2$ docker-compose ps
 $ docker exec composetest_nginx_1 cat /etc/hosts
-$ docker exec composetest_tomcatapp1_1 ip a 
+$ docker exec composetest_tomcatapp1_1 ip a
 $ docker exec composetest_tomcatapp2_1 ip a
 $ docker exec composetest_tomcatapp3_1 ip a
 $ curl http://localhost/sample/
@@ -348,4 +348,3 @@ $ docker-compose rm
 ---
 
 Creado por [carlessanagustin.com](http://www.carlessanagustin.com)
-
