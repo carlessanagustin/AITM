@@ -2,14 +2,14 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
- 
+
   config.vm.provider "virtualbox" do |vb|
     vb.memory = 512
     vb.cpus = 1
   end
   config.vm.boot_timeout = 60
- 
-    #### ANSIBLE
+
+#### ANSIBLE
   config.vm.define "zape" do |zape|
     zape.vm.host_name = "zape"
     zape.vm.box = "zape"
@@ -18,7 +18,7 @@ Vagrant.configure("2") do |config|
     zape.vm.network "forwarded_port", guest: 8080, host: 8083, auto_correct: true
   end
 
-    #### BASE
+#### BASE
   config.vm.define "base" do |base|
     base.vm.host_name = "base"
     base.vm.box = "base"

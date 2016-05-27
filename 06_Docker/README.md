@@ -12,8 +12,8 @@ Sigue las instrucciones paso a paso con la ayuda del instructor. Las prácticas 
 * Iniciamos máquina virtual:
 
 ```shell
-vagrant up zipi
-vagrant ssh zipi
+vagrant up base
+vagrant ssh base
 ```
 
 * Abrimos otro terminal siguiendo los pasos anteriores hasta obtener algo similar:

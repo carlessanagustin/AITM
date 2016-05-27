@@ -29,11 +29,11 @@ vim hosts/all
 [localhost]
 127.0.0.1
 
-[zipi]
-192.168.32.10
-
 [zape]
-192.168.32.10
+192.168.32.11
+
+[base]
+192.168.32.12
 ```
 
 * Salvamos y salimos con *:x*
@@ -59,10 +59,10 @@ vim hosts/all
 [localhost]
 127.0.0.1
 
-[zipi]
-192.168.32.10
+[base]
+192.168.32.12
 
-[zipi:vars]
+[base:vars]
 ntp_server=es.pool.ntp.org
 ansible_ssh_user=vagrant
 
@@ -70,7 +70,7 @@ ansible_ssh_user=vagrant
 192.168.32.11 ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
 
 [entorno:children]
-zipi
+base
 zape
 ```
 
@@ -129,7 +129,7 @@ vim request.yml
 
 ```yaml
 ---
-- hosts: zipi
+- hosts: zape
   tasks:
     - name: que sistema eres?
       command: uname -a
@@ -171,7 +171,7 @@ vim install.yml
 
 ```yaml
 ---
-- hosts: zipi
+- hosts: zape
   tasks:
     - name: instalamos nginx
       become: true
@@ -201,7 +201,7 @@ vim install.yml
 
 ```yaml
 ---
-- hosts: zipi
+- hosts: zape
   tasks:
     - name: instalamos nginx
       become: true
@@ -342,7 +342,7 @@ vim ../install2.yml
 
 ```yaml
 ---
-- hosts: zipi
+- hosts: zape
 
   roles:
     - nginx
