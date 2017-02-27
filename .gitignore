@@ -1,6 +1,10 @@
+etc-nrpe
+etc-nagios3
+
 template.md
 *-brainstorm.md
 AITM
+*.log
 
 htpasswd.users
 *.box
