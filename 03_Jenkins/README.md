@@ -13,7 +13,6 @@ vagrant up
 
 ## Configuración básica de Jenkins
 
-* ~~Manage Jenkins > Manage Plugins > ALL~~
 * Manage Jenkins > Configure System > Jenkins Location
 * System Admin e-mail address: example@example.com
 * Manage Jenkins > Configure System > E-mail Notification
@@ -77,21 +76,6 @@ vagrant ssh zipi -c \
 * Save
 * Sign up
 
-## ~~Plugins de seguridad~~
-
-* Manage Jenkins > Manage Plugins > Available > Search
-* Instalar plugin: Escaped Markup
-* Instalar plugin: Mask passwords
-* Instalar plugin: Audit Trail
-* Restart Jenkins
-
-## ~~Configurar el plugin Audit Trail~~
-
-* Manage Jenkins > Configure System > Audit Trail > Add logger > Log file
-* Log Location: /var/log/jenkins/pf-jenkins.log
-* Log File Size MB: 50
-* Log File Count: 5
-
 ## Job: Hello World
 
 * New Item
@@ -115,123 +99,14 @@ echo "hello world"
 ## Plugins de control de versiones
 
 * Instalar plugin: Git
-* Instalar plugin: GitHub
 * Instalar plugin: Delivery Pipeline
 * Instalar plugin: Build Pipeline
-* Instalar plugin: Python Wrapper
-* Instalar plugin: Python
-* Instalar plugin: ShiningPanda
-* Instalar plugin: Cobertura
-* Instalar plugin: SLOCCount
-* Instalar plugin: Unicorn Validation
-* Instalar plugin: Violations
-* Instalar plugin: Violations Columns
-* Instalar plugin: HTML Publisher
-* Instalar plugin: HTML5 Notifier
-
-## ~~Job: Primer test~~
-
-* New Item
-* Item name: taller_jenkins_1
-* Copy from: hello_world_job_demo
-* ~~GitHub project: https://github.com/carlessanagustin/pystache/~~
-* Source Code Management > Git
-* Repository URL: https://github.com/carlessanagustin/pystache.git
-* Branch Specifier (blank for 'any'): */local
-* Build > Add build step > Execute shell
-* Command: bash run_tests.sh
-* Apply
-* Build Now
-
-## ~~Job: Test avanzado~~
-
-```
-vagrant ssh zipi -c "sudo apt-get -y install virtualenv tox"
-vagrant ssh zipi -c "sudo service jenkins restart"
-```
-
-* taller_jenkins_1 > Configure
-* ~~Build > Add build step > Virtualenv Builder~~
-* Command: pip install -r requirements.txt
-* Build > Add build step > Execute shell
-* Command: bash run_tests_with_junit.sh
-* Apply
-* Build Now
-* Console Output: Explanation
-* Go to: https://github.com/carlessanagustin/pystache/blob/local/test.py
-* Jenkins > Build > Execute shell
-* Delete command: bash run_tests_with_junit.sh
-* Build > Add build step > Virtualenv Builder
-* Command: bash run_tests_with_junit.sh
-* Post-build Actions > Add post-build action > Publish JUnit test result report
-* Test report XMLs: `python_tests_xml/*.xml`
-* Activar: Retain long standard output/error
-* Apply
-* Build Now
-* Console Output
-* Test Result
-
-## Job: Gráficas
-
-* taller_jenkins_1 > Configure
-* Build > Virtualenv Builder
-* Command: bash run_tests_with_lint.sh
-* Post-build Actions > Add post-build action > Report Violations
-* pep8: pep8.log
-* pylint: pyflakes.log
-* Apply
-* Build Now
-* Mostrar resultados
-* Build > Virtualenv Builder
-* Command: bash run_tests_with_coverage.sh
-* Post-build Actions > Add post-build action > Publish cobertura Coverage Report
-* Apply
-* Build Now
-* Mostrar resultados
-* Build > Add build step > Execute Python Script
-* Command: (copiar+pegar) https://github.com/carlessanagustin/pystache/blob/local/gen_data.py
-* Post-build Actions > Add post-build action > Plot build data
-* Plot group
-* Plot title
-* Plot y-axis label
-* Plot Style: stacked area
-* Activar: Keep records for deleted builds
-* Data series file: hits.properties
-* Activar: Load data from properties file
-* Data series legend label: Hits
-* Add
-* Data series file: misses.properties
-* Activar: Load data from properties file
-* Data series legend label: Misses
-* Apply
-* Build Now
-* Mostrar resultados
-* Build > Execute shell
-* Command: sloccount --duplicates --wide --details * >> sloccount.sc
-* Post-build Actions > Add post-build action > Publish SLOCCount analysis results
-* SLOCCount reports: sloccount.sc
-* Apply
-* Build Now
-* Mostrar resultados
-
-## Configurar un pipeline (cadena de montaje)
-
-* Jenkins > +
-* View name: Pipeline demo
-* Activar: Build Pipeline View
-* OK
-* Select Initial Job: pystache demo
-* No Of Displayed Builds: 3
-* Activar: ALL
-* Save
-* Pystache demo > Configure
-* Post-build Actions > Add post-build action > Build other projects
-* Projects to build: pystache demo 2
-* Activar: Trigger only if build is stable
-* Save
-* Jenkins > Pipeline demo > Run
-* Mostrar resultados
-* Hacer paralelismo de pipelines + explicación
+* Instalar plugin: Build Monitor View
+* Instalar plugin: Mission Control
+* Instalar plugin: Sectioned View
+* Instalar plugin: Escaped Markup
+* Instalar plugin: Mask passwords
+* Instalar plugin: Audit Trail
 
 ## Nueva vista
 
@@ -245,19 +120,20 @@ vagrant ssh zipi -c "sudo service jenkins restart"
 ## Nodes/slaves (1/3) - Añadir node/slave a Jenkins
 
 * Manage Jenkins > Manage Nodes > New Node
-* Node name: AITM test machine
+* Node name: test_environment
 * Dumb Slave: Enable
-* # of executors: 1 (CPU cores)
-* Remote root directory: /home/jenkins
-* Labels: aitm test ubuntu linux
+* # of executors: 1
+* Remote root directory: /home/ubuntu/jenkins_agent
+* Labels: test, centos, redhat, linux
 * Usage: Utilize this node as much as possible
 * Launch method: Launch slave agents on Unix machines via SSH
-* Host: 192.168.32.11
+* Host: 192.168.32.13
 * Credentials > Add (C)
 * C: Kind: Username with password
 * C: Scope System
-* C: Username: jenkins
-* C: Password: jenkins123
+* C: Username: ubuntu
+* Buscar contraseña en: `cat ~/.vagrant.d/boxes/ubuntu-VAGRANTSLASH-xenial64/20170224.0.0/virtualbox/Vagrantfile`
+* C: Password: ____
 * C: Add
 * Availability: Keep this slave on-line as much as possible
 * Save
