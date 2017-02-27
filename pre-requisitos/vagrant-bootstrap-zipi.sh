@@ -15,7 +15,8 @@ apt-get -y install language-pack-en
 locale-gen en_GB.UTF-8
 
 apt-get -y install git curl vim screen ssh tree lynx links links2 unzip
-apt-get -y install openjdk-7-jre openjdk-7-jdk
+#apt-get -y install openjdk-7-jre openjdk-7-jdk
+apt-get -y install openjdk-8-jre openjdk-8-jdk
 
 apt-get -y install jenkins
 service jenkins start
