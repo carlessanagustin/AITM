@@ -1,13 +1,20 @@
 #!/bin/bash
 
-vagrant up base --provision
-vagrant halt
-vagrant package --output ../../ubuntu-trusty-64-base.box base
-vagrant box add base ../../ubuntu-trusty-64-base.box
+# base image
+vagrant up base --provision && \
+    vagrant halt base && \
+    vagrant package --output ../../ubuntu-xenial-64-base.box base && \
+    vagrant box add base ../../ubuntu-xenial-64-base.box
+
+# extra images
 vagrant up zipi zape --provision
 vagrant halt
-vagrant package --output ../../ubuntu-trusty-64-zipi.box zipi
-vagrant package --output ../../ubuntu-trusty-64-zape.box zape
+vagrant package --output ../../ubuntu-xenial-64-zipi.box zipi
+vagrant package --output ../../ubuntu-xenial-64-zape.box zape
 
-echo "yout boxes ready at...
-ls ../../
+echo "Your boxes ready at: "
+cd ../../
+pwd
+
+echo "Jenkins password: "
+vagrant ssh zipi -c "sudo cat /var/lib/jenkins/secrets/initialAdminPassword"
