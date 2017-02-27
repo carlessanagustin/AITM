@@ -13,7 +13,7 @@ vagrant up
 
 ## Configuración básica de Jenkins
 
-* Manage Jenkins > Manage Plugins > ALL
+* ~~Manage Jenkins > Manage Plugins > ALL~~
 * Manage Jenkins > Configure System > Jenkins Location
 * System Admin e-mail address: example@example.com
 * Manage Jenkins > Configure System > E-mail Notification
@@ -35,24 +35,15 @@ vagrant up
 * Manage Jenkins > Manage Plugins > Available > Search
 * Instalar plugin: [thinBackup](https://wiki.jenkins-ci.org/display/JENKINS/thinBackup)
 * Instalar plugin: [Green Balls](https://wiki.jenkins-ci.org/display/JENKINS/Green+Balls)
-* Instalar plugin: [Disk Usage Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Disk+Usage+Plugin)
+* Instalar plugin: [Disk Usage Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Disk+Usage+Plugin) (disk-usage)
 * Instalar plugin: [Monitoring](https://wiki.jenkins-ci.org/display/JENKINS/Monitoring)
 * Restart Jenkins
-
-## Mostrar LOG de Jenkins
-
-```
-vagrant ssh zipi
-tail -f /var/log/jenkins/jenkins.log
-Salir: CTRL+C
-```
 
 ## Pre-configuración de ThinBackup
 
 ```
-sudo su -
-    mkdir /backup-jenkins
-    chown jenkins:jenkins /backup-jenkins
+vagrant ssh zipi -c \
+  "sudo mkdir /backup-jenkins && sudo chown jenkins:jenkins /backup-jenkins"
 ```
 
 ## Tour por los plugins instalados
@@ -64,6 +55,15 @@ sudo su -
 * Activar: Clean up differential backups
 * Activar: Move old backups to ZIP files
 * Save
+
+## Mostrar LOG de Jenkins
+
+```
+vagrant ssh zipi -c \
+  "sudo tail -f /var/log/jenkins/jenkins.log"
+```
+
+> Salir: CTRL+C
 
 ## Configurar la seguridad de Jenkins
 
@@ -77,7 +77,7 @@ sudo su -
 * Save
 * Sign up
 
-## Plugins de seguridad
+## ~~Plugins de seguridad~~
 
 * Manage Jenkins > Manage Plugins > Available > Search
 * Instalar plugin: Escaped Markup
@@ -85,12 +85,32 @@ sudo su -
 * Instalar plugin: Audit Trail
 * Restart Jenkins
 
-## Configurar el plugin Audit Trail
+## ~~Configurar el plugin Audit Trail~~
 
 * Manage Jenkins > Configure System > Audit Trail > Add logger > Log file
 * Log Location: /var/log/jenkins/pf-jenkins.log
 * Log File Size MB: 50
 * Log File Count: 5
+
+## Job: Hello World
+
+* New Item
+* Item name: hello_world_job_demo
+* Activar: Freestyle project
+* OK
+* Description: hello world example
+* Build > Add build step > Execute shell
+
+```shell
+pwd
+ls -la
+id
+echo "hello world"
+```
+
+* Save
+* Build Now
+* Build History > #1 > Console Output
 
 ## Plugins de control de versiones
 
@@ -109,26 +129,12 @@ sudo su -
 * Instalar plugin: HTML Publisher
 * Instalar plugin: HTML5 Notifier
 
-## Job: Hello World
+## ~~Job: Primer test~~
 
 * New Item
-* Item name: taller jenkins demo
-* Activar: Freestyle project
-* OK
-* Description: blablabla...
-* Build > Add build step > Execute shell
-* Command: echo "hello world"
-* Command: pwd
-* Command: ls -la
-* Save
-* Build Now
-
-## Job: Primer test
-
-* New Item
-* Item name: taller jenkins git
-* Copy existing Item: taller jenkins demo
-* GitHub project: https://github.com/carlessanagustin/pystache/
+* Item name: taller_jenkins_1
+* Copy from: hello_world_job_demo
+* ~~GitHub project: https://github.com/carlessanagustin/pystache/~~
 * Source Code Management > Git
 * Repository URL: https://github.com/carlessanagustin/pystache.git
 * Branch Specifier (blank for 'any'): */local
@@ -137,10 +143,15 @@ sudo su -
 * Apply
 * Build Now
 
-## Job: Test avanzado
+## ~~Job: Test avanzado~~
 
-* taller jenkins git > Configure
-* Build > Add build step > Virtualenv Builder
+```
+vagrant ssh zipi -c "sudo apt-get -y install virtualenv tox"
+vagrant ssh zipi -c "sudo service jenkins restart"
+```
+
+* taller_jenkins_1 > Configure
+* ~~Build > Add build step > Virtualenv Builder~~
 * Command: pip install -r requirements.txt
 * Build > Add build step > Execute shell
 * Command: bash run_tests_with_junit.sh
@@ -153,7 +164,7 @@ sudo su -
 * Build > Add build step > Virtualenv Builder
 * Command: bash run_tests_with_junit.sh
 * Post-build Actions > Add post-build action > Publish JUnit test result report
-* Test report XMLs: python_tests_xml/*.xml
+* Test report XMLs: `python_tests_xml/*.xml`
 * Activar: Retain long standard output/error
 * Apply
 * Build Now
@@ -162,7 +173,7 @@ sudo su -
 
 ## Job: Gráficas
 
-* taller jenkins git > Configure
+* taller_jenkins_1 > Configure
 * Build > Virtualenv Builder
 * Command: bash run_tests_with_lint.sh
 * Post-build Actions > Add post-build action > Report Violations
