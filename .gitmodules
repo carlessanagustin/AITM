@@ -1,0 +1,4 @@
+[submodule "xescuder/ait"]
+	path = xescuder/ait
+	url = https://github.com/xescuder/ait.git
+	branch = master
