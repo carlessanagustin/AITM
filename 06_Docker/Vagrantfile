@@ -8,6 +8,8 @@ Vagrant.configure("2") do |config|
     vb.cpus = 1
   end
   config.vm.boot_timeout = 60
+  config.ssh.username = "ubuntu"
+  
 #### DOCKER
   config.vm.define "base" do |base|
     base.vm.host_name = "base"
