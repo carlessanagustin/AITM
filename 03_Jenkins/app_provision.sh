@@ -12,22 +12,10 @@ elif type "apt-get" &> /dev/null ;
 then
   echo 'Debian based OS'
   sudo apt-get update
-  sudo yum -y install gcc-c++ make vim wget git
+  sudo apt-get -y install gcc-c++ make vim wget git
   curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
-  sudo apt-get install -y nodejs
+  sudo apt-get install -y nodejs npm
 else
 	echo 'Unknown OS'
   exit 1
 fi
-
-# deploy app
-cd $HOME
-npm update
-git clone https://github.com/xescuder/ait.git
-cd ait
-npm install
-
-# run app
-cd $HOME/ait
-nohup bash ./scripts/web-server.sh &
-exit 0
