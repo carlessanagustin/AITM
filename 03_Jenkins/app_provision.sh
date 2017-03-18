@@ -12,9 +12,9 @@ elif type "apt-get" &> /dev/null ;
 then
   echo 'Debian based OS'
   sudo apt-get update
-  sudo apt-get -y install gcc-c++ make vim wget git
+  sudo apt-get -y install build-essential vim wget git
   curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
-  sudo apt-get install -y nodejs npm
+  sudo apt-get install -y nodejs
 else
 	echo 'Unknown OS'
   exit 1
