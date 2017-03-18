@@ -1,4 +1,3 @@
 #!/bin/bash
 
-vagrant destroy -f
-rm -Rf .vagrant
+vagrant destroy -f && rm -Rf .vagrant
