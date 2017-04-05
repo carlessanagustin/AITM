@@ -1,0 +1,13 @@
+[localhost]
+127.0.0.1
+
+[zape]
+192.168.32.11
+
+[base]
+192.168.32.12
+
+[all:vars]
+ansible_connection=ssh
+ansible_ssh_user=ubuntu
+ansible_ssh_pass=c02b644df7ddd7348994b896

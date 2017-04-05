@@ -1,0 +1,127 @@
+---
+# USAGE: ansible-playbook -i hosts/all request.yml --list-hosts --list-tasks
+# PASSWORD: `cat ~/.vagrant.d/boxes/ubuntu-VAGRANTSLASH-xenial64/20170224.0.0/virtualbox/Vagrantfile`
+
+- hosts: base
+
+  vars_files:
+    - "./vars_{{ ansible_os_family }}.yml"
+
+  tasks:
+    - name: que sistema eres?
+      command: uname -a
+      register: info
+    - name: imprimir variable
+      debug: var=info
+    - name: imprimir campo de variable
+      debug: var=info.stdout
+    - name: como te llamas?
+      command: hostname
+      register: info
+    - name: dame tu nombre
+      debug: var=info.stdout
+
+    - name: Accion "useradd -m -s /bin/bash jenkins"
+      become: yes
+      user:
+        name: jenkins
+        createhome: yes
+        shell: /bin/bash
+        password: "$6$sSmkJFIO$pA7AEcYSe6ojzVvZmf/dflLs6d5s/59ZvFCAAJ/OUM4IrfD7egKFo9gro6OXyLhzfSQe20u7cOKKc8n4LYmN3."
+
+# mkpasswd --method=sha-512
+# Password: jenkins123
+# $6$sSmkJFIO$pA7AEcYSe6ojzVvZmf/dflLs6d5s/59ZvFCAAJ/OUM4IrfD7egKFo9gro6OXyLhzfSQe20u7cOKKc8n4LYmN3.
+
+    - name: Añadir "jenkins ALL=(ALL) NOPASSWD:ALL" a /etc/sudoers
+      become: yes
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^jenkins'
+        line: 'jenkins ALL=(ALL) NOPASSWD:ALL'
+        validate: visudo -cf %s
+
+    - name: Instalamos requerimientos para RedHat based OS
+      become: yes
+      yum:
+        name: "{{ item }}"
+        state: latest
+        update_cache: yes
+      with_items:
+        - gcc-c++
+        - make
+        - vim
+        - wget
+        - git
+      when: ansible_os_family == "RedHat"
+
+    - name: Instalamos requerimientos para Debian based OS
+      become: yes
+      apt:
+        name: "{{ item }}"
+        state: latest
+        update_cache: yes
+        cache_valid_time: 3600
+      with_items:
+        - build-essential
+        - vim
+        - wget
+        - git
+        - python-minimal
+      when: ansible_os_family == "Debian"
+
+    - name: Download nodejs repo script
+      get_url:
+        url: "{{ nodejs_url }}"
+        dest: "{{ ansible_env.HOME}}/nodejs.sh"
+
+    - name: Run nodejs repo script
+      become: yes
+      shell: "bash {{ ansible_env.HOME}}/nodejs.sh"
+
+    - name: Instalamos nodejs para RedHat based OS
+      become: yes
+      yum:
+        name: nodejs
+        state: latest
+        update_cache: yes
+      when: ansible_os_family == "RedHat"
+
+    - name: Instalamos nodejs para Debian based OS
+      become: yes
+      apt:
+        name: nodejs
+        state: latest
+        update_cache: yes
+        cache_valid_time: 3600
+      when: ansible_os_family == "Debian"
+
+    - name: Descargamos el repositorio
+      git:
+        repo: https://github.com/xescuder/ait.git
+        dest: "{{ ansible_env.HOME}}/ait"
+        version: 9abd6d6ac6533f0cb03274fb252f723373cbb1d9
+        force: yes
+
+    - name: Accion "npm install jasmine pm2"
+      npm:
+        name: "{{ item }}"
+        path: "{{ ansible_env.HOME}}/ait/node_modules"
+        state: latest
+      with_items:
+        - jasmine
+        - pm2
+
+    - name: Run app
+      command: node_modules/pm2/bin/pm2 start server/start.js
+      args:
+        chdir: "{{ ansible_env.HOME}}/ait"
+
+
+
+
+
+
+
+#### END
