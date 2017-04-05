@@ -165,11 +165,11 @@ then
   sudo apt-get -y install build-essential vim wget git
   curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
   sudo apt-get install -y nodejs
+  sudo apt-get -y install python-minimal
 else
   echo 'Unknown OS'
   exit 1
 fi
-sudo apt-get -y install python-minimal
 ```
 
 ## Testing de una aplicación web (3/4) - Test
@@ -249,11 +249,6 @@ BUILD_ID=dontKillMe node_modules/pm2/bin/pm2 start server/start.js
 ```
 vagrant destroy -f
 ```
----
-
-### extras - Contraseña Vagrant
-
-* Contraseña Ubuntu Vagrant en Mac OSX: `cat ~/.vagrant.d/boxes/ubuntu-VAGRANTSLASH-xenial64/20170224.0.0/virtualbox/Vagrantfile`
 
 ### extras - Otros plugins interesantes
 

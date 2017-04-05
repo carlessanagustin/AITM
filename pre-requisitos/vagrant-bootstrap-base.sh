@@ -10,7 +10,8 @@ apt-get install -y --no-install-recommends \
         apt-transport-https \
         ca-certificates \
         curl \
-        software-properties-common
+        software-properties-common \
+        python-minimal
 
 # Add Docker’s official GPG key
 curl -fsSL https://apt.dockerproject.org/gpg | sudo apt-key add -

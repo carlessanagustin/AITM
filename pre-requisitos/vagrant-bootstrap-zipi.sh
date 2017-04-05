@@ -51,13 +51,6 @@ service nginx restart
 
 ########################### NAGIOS NODE ###########################
 
-# upgrading system
-apt-get update
-#apt-get -y upgrade
-
-# language settings
-locale-gen UTF-8
-
 # nagios related: Nagios Remote Plugin Executor Server
 apt-get -y install nagios-nrpe-server
 

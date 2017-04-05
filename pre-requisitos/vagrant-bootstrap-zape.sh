@@ -4,27 +4,20 @@
 
 # upgrading system
 apt-get update
-#apt-get -y upgrade
+apt-get -y upgrade
 
 # language settings
 apt-get -y install language-pack-en
 locale-gen en_GB.UTF-8
 
 # jenkins node requirements
-apt-get -y install openjdk-7-jre openjdk-7-jdk
+apt-get -y install openjdk-8-jre openjdk-8-jdk
 
 ########################### NAGIOS SERVER ###########################
 
 MAILNAME="zipi.com"
 MAILTYPE="'Internet Site'"
 PASS="nagios123"
-
-# upgrading system
-apt-get update
-#apt-get -y upgrade
-
-# language settings
-locale-gen UTF-8
 
 # postfix unattended
 debconf-set-selections <<< "postfix postfix/mailname string $MAILNAME"
@@ -72,20 +65,12 @@ apt-add-repository -y ppa:ansible/ansible
 
 # upgrading system
 apt-get update
-#apt-get -y upgrade
-
-# language settings
-apt-get -y install language-pack-en
-locale-gen en_GB.UTF-8
 
 # packages: basic
 apt-get -y install git curl vim screen ssh tree lynx links links2 unzip
 
 # packages: python
 apt-get -y install python-pip python-dev build-essential python-virtualenv
-
-# local configuration
-locale-gen en_GB.UTF-8
 
 # packages: ansible
 apt-get -y install software-properties-common

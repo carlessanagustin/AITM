@@ -12,9 +12,9 @@ vagrant halt
 vagrant package --output ../../ubuntu-xenial-64-zipi.box zipi
 
 ## zape box: ansible + nagios server
-#vagrant up zape --provision
-#vagrant halt
-#vagrant package --output ../../ubuntu-xenial-64-zape.box zape
+vagrant up zape --provision
+vagrant halt
+vagrant package --output ../../ubuntu-xenial-64-zape.box zape
 
 echo "Your boxes ready at: "
 cd ../../
