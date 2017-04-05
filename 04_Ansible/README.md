@@ -8,18 +8,39 @@ Sigue las instrucciones paso a paso con la ayuda del instructor. Las prácticas 
 
 * Instalar Ansible - http://docs.ansible.com/ansible/intro_installation.html
 
-NOTA: Windows no es compatible como máquina de control
+> NOTA: Windows no es compatible como máquina de control
 
 * Abrir Git Bash (Windows) o Terminal (Linux/MacOSX)
-* Iniciamos máquinas virtuales
+
+## Configuración
+
+```shell
+vagrant up && vagrant ssh zape
+cd /vagrant && mkdir -p ansible/hosts && cd ansible
+sudo cp /etc/ansible/ansible.cfg .
+vim ansible.cfg
+```
+
+> Tambien podemos descargar la configuración del respositorio oficial: https://github.com/ansible/ansible/blob/devel/examples/ansible.cfg
+
+* Aseguramos que tenemos la siguiente configuración
+
+```python
+remote_user = ubuntu
+host_key_checking = False
+```
+
+* Salvamos y salimos con *:x*
+
+> NOTA: Orden de prioridad del fichero de configuración:
+1. ANSIBLE_CONFIG (variable de entorno POSIX)
+2. ansible.cfg (en carpeta actual)
+3. ~/.ansible.cfg (en el directorio home del usuario ejecutor)
+4. /etc/ansible/ansible.cfg
 
 ## "hello world"
 
 ```shell
-vagrant up
-vagrant ssh zape
-cd /vagrant
-mkdir -p ansible/hosts && cd ansible
 vim hosts/all
 ```
 
@@ -44,7 +65,10 @@ ansible localhost -i hosts/all -m ping
 ansible zape -i hosts/all -m ping -k
 ```
 
-* Introducimos la contraseña del usuario vagrant que es *vagrant*.
+* Introducimos la contraseña del usuario vagrant que es `c02b644df7ddd7348994b896`.
+
+> NOTA: Contraseña Ubuntu Vagrant en Mac OSX: `cat ~/.vagrant.d/boxes/ubuntu-VAGRANTSLASH-xenial64/20170224.0.0/virtualbox/Vagrantfile`
+
 * ¿Que sucede?
 
 ## Inventario (opcional)
@@ -72,6 +96,11 @@ ansible_ssh_user=vagrant
 [entorno:children]
 base
 zape
+
+[all:vars]
+ansible_connection=ssh
+ansible_ssh_user=ubuntu
+;ansible_ssh_pass=c02b644df7ddd7348994b896
 ```
 
 * Salvamos y salimos con *:x*
@@ -83,39 +112,7 @@ ansible all -i hosts/all -m setup --tree /tmp/facts -k
 * Introducimos la contraseña del usuario vagrant que es *vagrant*.
 * ¿Que sucede?
 
-* También podemos obtener la información de inventorios dinámicos: http://docs.ansible.com/ansible/intro_dynamic_inventory.html
-
-## Configuración
-
-* Abrimos un navegador y vamos a https://github.com/ansible/ansible/blob/devel/examples/ansible.cfg
-
-```shell
-wget https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg
-vim ansible.cfg
-```
-
-* Aseguramos que tenemos la siguiente configuración
-
-```python
-remote_user   = vagrant
-
-# ask_pass      = True
-sudo_user      = root
-sudo           = yes
-# ask_sudo_pass = True
-
-host_key_checking = False
-gathering = smart
-```
-
-* Salvamos y salimos con *:x*
-
-### Orden de prioridad del fichero de configuración
-
-1. ANSIBLE_CONFIG (an environment variable)
-2. ansible.cfg (en carpeta actual)
-3. ~/.ansible.cfg (en el directorio home del usuario ejecutor)
-4. /etc/ansible/ansible.cfg
+> También podemos obtener la información de inventorios dinámicos: http://docs.ansible.com/ansible/intro_dynamic_inventory.html
 
 ## Playbook
 
@@ -411,5 +408,7 @@ The key's randomart image is:
 +-----------------+
 ssh-copy-id -i /home/vagrant/.ssh/id_rsa_ansible.pub vagrant@192.168.32.11
 ```
+
+---
 
 Creado por [carlessanagustin.com](http://www.carlessanagustin.com)
