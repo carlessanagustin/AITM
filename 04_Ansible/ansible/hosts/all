@@ -10,4 +10,4 @@
 [all:vars]
 ansible_connection=ssh
 ansible_ssh_user=ubuntu
-ansible_ssh_pass=c02b644df7ddd7348994b896
+ansible_ssh_pass=e43b35d5be0112aeaa005902

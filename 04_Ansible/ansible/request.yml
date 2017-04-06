@@ -1,6 +1,8 @@
 ---
 # USAGE: ansible-playbook -i hosts/all request.yml --list-hosts --list-tasks
-# PASSWORD: `cat ~/.vagrant.d/boxes/ubuntu-VAGRANTSLASH-xenial64/20170224.0.0/virtualbox/Vagrantfile`
+
+# PASSWORD: `cat ~/.vagrant.d/boxes/ubuntu-VAGRANTSLASH-xenial64/20170331.0.0/virtualbox/Vagrantfile`
+# OUTPUT: config.ssh.username = "ubuntu" + config.ssh.password = "e43b35d5be0112aeaa005902"
 
 - hosts: base
 
@@ -104,13 +106,12 @@
         version: 9abd6d6ac6533f0cb03274fb252f723373cbb1d9
         force: yes
 
-    - name: Accion "npm install jasmine pm2"
+    - name: Accion "npm install pm2"
       npm:
         name: "{{ item }}"
         path: "{{ ansible_env.HOME}}/ait/node_modules"
         state: latest
       with_items:
-        - jasmine
         - pm2
 
     - name: Run app
