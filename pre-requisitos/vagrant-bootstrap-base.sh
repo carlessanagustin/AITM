@@ -11,7 +11,7 @@ apt-get install -y --no-install-recommends \
         ca-certificates \
         curl \
         software-properties-common \
-        python-minimal
+        python-minimal zip python-simplejson
 
 # Add Docker’s official GPG key
 curl -fsSL https://apt.dockerproject.org/gpg | sudo apt-key add -

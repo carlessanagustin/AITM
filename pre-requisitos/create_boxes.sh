@@ -1,10 +1,19 @@
 #!/bin/bash
 
+while true; do
+    read -p "Remove local exported boxes? [y|n]" yn
+    case $yn in
+        [Yy]* ) rm ../../ubuntu-xenial-64-base.box && rm ../../ubuntu-xenial-64-zipi.box && rm ../../ubuntu-xenial-64-zape.box; break;;
+        [Nn]* ) echo "Next steps..."; break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+
 # base box
 vagrant up base --provision && \
     vagrant halt base && \
     vagrant package --output ../../ubuntu-xenial-64-base.box base && \
-    vagrant box add base ../../ubuntu-xenial-64-base.box
+    vagrant box add --force base ../../ubuntu-xenial-64-base.box
 
 # zipi box: jenkins server
 vagrant up zipi --provision

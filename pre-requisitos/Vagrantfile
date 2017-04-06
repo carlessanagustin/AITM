@@ -12,10 +12,9 @@ Vagrant.configure("2") do |config|
   config.vm.define "base" do |base|
     base.vm.host_name = "base"
     base.vm.box = "ubuntu/xenial64"
+    base.vm.box_version = "20170331.0.0"
     base.vm.provision :shell, :path => "vagrant-bootstrap-base.sh"
     base.vm.network "private_network", ip: "192.168.32.12", virtualbox__intnet: true, auto_config: true
-    base.vm.network "forwarded_port", guest: 80, host: 8084, auto_correct: true
-    base.vm.network "forwarded_port", guest: 8080, host: 8085, auto_correct: true
   end
 
   config.vm.define "zipi" do |zipi|
@@ -24,8 +23,6 @@ Vagrant.configure("2") do |config|
     zipi.vm.box = "base"
     zipi.vm.provision :shell, :path => "vagrant-bootstrap-zipi.sh"
     zipi.vm.network "private_network", ip: "192.168.32.10", virtualbox__intnet: true, auto_config: true
-    zipi.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
-    zipi.vm.network "forwarded_port", guest: 8080, host: 8081, auto_correct: true
   end
 
   config.vm.define "zape" do |zape|
@@ -34,22 +31,5 @@ Vagrant.configure("2") do |config|
     zape.vm.box = "base"
     zape.vm.provision :shell, :path => "vagrant-bootstrap-zape.sh"
     zape.vm.network "private_network", ip: "192.168.32.11", virtualbox__intnet: true, auto_config: true
-    zape.vm.network "forwarded_port", guest: 80, host: 8082, auto_correct: true
-    zape.vm.network "forwarded_port", guest: 8080, host: 8083, auto_correct: true
   end
-
-  config.vm.define "test" do |test|
-    test.vm.host_name = "test"
-    test.vm.network "private_network", ip: "192.168.32.13", virtualbox__intnet: true, auto_config: true
-
-    test.vm.box = "ubuntu/xenial64"
-    test.vm.provision "shell", inline: "apt-get update && apt-get -y upgrade && apt-get -y install openjdk-8-jre openjdk-8-jdk"
-# cat ~/.vagrant.d/boxes/ubuntu-VAGRANTSLASH-xenial64/20170224.0.0/virtualbox/Vagrantfile
-    #test.vm.box = "centos/7"
-    #test.vm.provision "shell", inline: "yum -y update && yum -y install java-1.8.0-openjdk"
-
-    test.vm.network "forwarded_port", guest: 80, host: 8086, auto_correct: true
-    test.vm.network "forwarded_port", guest: 8080, host: 8087, auto_correct: true
-  end
-
 end
