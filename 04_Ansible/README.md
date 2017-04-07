@@ -40,11 +40,8 @@ host_key_checking = False
 
 ## "hello world"
 
-```shell
-vim hosts/all
-```
-
-* Añadimos...
+* Especificamos el inventorio de instancias
+* Creamos el archivo `hosts/all`
 
 ```ini
 [localhost]
@@ -57,300 +54,266 @@ vim hosts/all
 192.168.32.12
 ```
 
-* Salvamos y salimos con *:x*
-* Ejecutamos...
+* Ejecutamos
 
 ```shell
 ansible localhost -i hosts/all -m ping
+```
+
+* ¿Que sucede?
+* Ejecutamos
+
+```shell
 ansible zape -i hosts/all -m ping -k
 ```
 
-* Introducimos la contraseña del usuario vagrant que es `c02b644df7ddd7348994b896`.
+* ¿Que sucede?
+* Introducimos la contraseña del usuario ubuntu que es `e43b35d5be0112aeaa005902`.
 
-> NOTA: Contraseña Ubuntu Vagrant en Mac OSX: `cat ~/.vagrant.d/boxes/ubuntu-VAGRANTSLASH-xenial64/20170224.0.0/virtualbox/Vagrantfile`
+> Para obtener la contraseña:
+root# cat ~/.vagrant.d/boxes/ubuntu-VAGRANTSLASH-xenial64/20170331.0.0/virtualbox/Vagrantfile
 
 * ¿Que sucede?
-
-## Inventario (opcional)
-
-```shell
-vim hosts/all
-```
-
-* Actualizamos...
-
-```ini
-[localhost]
-127.0.0.1
-
-[base]
-192.168.32.12
-
-[base:vars]
-ntp_server=es.pool.ntp.org
-ansible_ssh_user=vagrant
-
-[zape]
-192.168.32.11 ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
-
-[entorno:children]
-base
-zape
-
-[all:vars]
-ansible_connection=ssh
-ansible_ssh_user=ubuntu
-;ansible_ssh_pass=c02b644df7ddd7348994b896
-```
-
-* Salvamos y salimos con *:x*
-
-```shell
-ansible all -i hosts/all -m setup --tree /tmp/facts -k
-```
-
-* Introducimos la contraseña del usuario vagrant que es *vagrant*.
-* ¿Que sucede?
-
-> También podemos obtener la información de inventorios dinámicos: http://docs.ansible.com/ansible/intro_dynamic_inventory.html
-
-## Playbook
-
-### Consultas
-
-```shell
-vim request.yml
-```
-
-* Introducimos el siguiente texto
+* Construimos nuestro primer playbook de Ansible
+* Creamos el archivo `request.yml`
 
 ```yaml
 ---
-- hosts: zape
+- hosts: base
+
   tasks:
     - name: que sistema eres?
       command: uname -a
       register: info
+
     - name: imprimir variable
       debug: var=info
+
     - name: imprimir campo de variable
       debug: var=info.stdout
 
     - name: como te llamas?
       command: hostname
       register: info
+
     - name: dame tu nombre
       debug: var=info.stdout
 ```
 
-* Ejecutamos
+* Cambiamos el archivo `hosts/all`
 
-```shell
-ansible-playbook request.yml -i hosts/all --list-tasks --list-hosts
+```ini
+[localhost]
+127.0.0.1
+
+[zape]
+192.168.32.11
+
+[base]
+192.168.32.12
+
+[all:vars]
+ansible_connection=ssh
+ansible_ssh_user=ubuntu
+ansible_ssh_pass=e43b35d5be0112aeaa005902
 ```
 
-* ¿Que sucede?
-
-```shell
-ansible-playbook request.yml -i hosts/all -k
-```
-
-* ¿Que sucede?
-* Abrimos un navegador y vamos a http://docs.ansible.com/ansible/YAMLSyntax.html
-
-### Aprovisionamiento
-
-```shell
-vim install.yml
-```
-
-* Introducimos el siguiente texto
-
-```yaml
----
-- hosts: zape
-  tasks:
-    - name: instalamos nginx
-      become: true
-      apt: name={{ package }} state=latest update_cache=yes cache_valid_time=3600
-
-  vars:
-    package: nginx
-
-# Equivalente de "update apt-get", si la última actualización es de hace más de 3600 segundos
-```
+> Para obtener la contraseña:
+root# cat ~/.vagrant.d/boxes/ubuntu-VAGRANTSLASH-xenial64/20170331.0.0/virtualbox/Vagrantfile
 
 * Ejecutamos
 
-```shell
-ansible-playbook install.yml -i hosts/all -k
+```
+ansible-playbook \
+    -i hosts/all request.yml \
+    --list-hosts --list-tasks
 ```
 
-* Abrimos un navegador y vamos a http://localhost:8080/
 * ¿Que sucede?
+* Ejecutamos
 
-
-```shell
-vim install.yml
+```
+ansible-playbook \
+    -i hosts/all request.yml
 ```
 
-* Introducimos el siguiente texto
+* ¿Que sucede?
+* Creamos un usuario y lo configuramos
+
+> Para crear una contraseña:
+root# mkpasswd --method=sha-512
+root# Password: jenkins123
+
+* Añadimos al archivo `request.yml`
 
 ```yaml
----
-- hosts: zape
-  tasks:
-    - name: instalamos nginx
-      become: true
-      apt: name={{ package }} state=latest update_cache=yes cache_valid_time=3600
+    - name: Accion "useradd -m -s /bin/bash jenkins"
+      become: yes
+      user:
+        name: jenkins
+        createhome: yes
+        shell: /bin/bash
+        password: "$6$sSmkJFIO$pA7AEcYSe6ojzVvZmf/dflLs6d5s/59ZvFCAAJ/OUM4IrfD7egKFo9gro6OXyLhzfSQe20u7cOKKc8n4LYmN3."
+
+    - name: Añadir "jenkins ALL=(ALL) NOPASSWD:ALL" a /etc/sudoers
+      become: yes
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^jenkins'
+        line: 'jenkins ALL=(ALL) NOPASSWD:ALL'
+        validate: visudo -cf %s
+
+```
+
+* Ejecutamos
+
+```
+ansible-playbook \
+    -i hosts/all request.yml
+```
+
+* ¿Que sucede?
+* TODO: ansible-vault
+* Instalamos los paquetes necesarios para arrancar nuestro código.
+* Añadimos al archivo `request.yml`
+
+```yaml
+    - name: Instalamos requerimientos para RedHat based OS
+      become: yes
+      yum:
+        name: "{{ item }}"
+        state: latest
+        update_cache: yes
+      with_items:
+        - gcc-c++
+        - make
+        - vim
+        - wget
+        - git
+      when: ansible_os_family == "RedHat"
+
+    - name: Instalamos requerimientos para Debian based OS
+      become: yes
+      apt:
+        name: "{{ item }}"
+        state: latest
+        update_cache: yes
+        cache_valid_time: 3600
+      with_items:
+        - build-essential
+        - vim
+        - wget
+        - git
+        - python-minimal
+      when: ansible_os_family == "Debian"
+```
+
+* Ejecutamos
+
+```
+ansible-playbook \
+    -i hosts/all request.yml
+```
+
+* ¿Que sucede?
+* Instalamos nodejs para distribuciones RedHat y Debian.
+* Añadimos al archivo: `request.yml`
+
+```yaml
+    - name: Download nodejs repo script
+      get_url:
+        url: "{{ nodejs_url }}"
+        dest: "{{ ansible_env.HOME}}/nodejs.sh"
+
+    - name: Run nodejs repo script
+      become: yes
+      shell: "bash {{ ansible_env.HOME}}/nodejs.sh"
+
+    - name: Instalamos nodejs para RedHat based OS
+      become: yes
+      yum:
+        name: nodejs
+        state: latest
+        update_cache: yes
+      when: ansible_os_family == "RedHat"
+
+    - name: Instalamos nodejs para Debian based OS
+      become: yes
+      apt:
+        name: nodejs
+        state: latest
+        update_cache: yes
+        cache_valid_time: 3600
       when: ansible_os_family == "Debian"
 
-# Equivalente de "update apt-get", si la última actualización es de hace más de 3600 segundos
-
-    - name: despliegue de la aplicacion
-      become: true
-      template: src={{ template_name }} dest={{ destination }} owner=root group=root mode=0644 backup=yes
-
-    - name: ls /usr/share/nginx/html/
-      command: ls /usr/share/nginx/html/
-      register: contents
-
-    - name: mostrar variable
-      debug: var=contents.stdout_lines
-
-  vars:
-    package: nginx
-    template_name: "index.html.j2"
-    destination: /usr/share/nginx/html/index.html
-    url: "http://www.chiquitoipsum.com/"
-    url_title: "chiquitoipsum"
-    condicion: True
-    demo: Ansible
+  vars_files:
+    - "./vars_{{ ansible_os_family }}.yml"
 ```
 
-* Salvamos y salimos con *:x*
+* Creamos el archivo `vars_RedHat.yml`: 
+
+```yaml
+---
+nodejs_url: "https://rpm.nodesource.com/setup_4.x"
+```
+
+* Creamos el archivo `vars_Debian.yml`: 
+
+```yaml
+---
+nodejs_url: "https://deb.nodesource.com/setup_4.x "
+```
+
+* (opcional) Securizar ficheros
 
 ```shell
-vim index.html.j2
+ansible-vault encrypt \
+    --output=SECURErequest.yml \
+    request.yml
 ```
 
-* Introducimos el siguiente texto
+* Ejecutamos
 
-```html
-<!DOCTYPE html>
-<html>
-<head>
-<title>{{ demo }} test</title>
-</head>
-<body>
-<h1>Estamos viendo el poder de {{ demo }}</h1>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris gravida.</p>
-
-{% if condicion %}
-    <p>Visita: <a href="{{ url }}">{{ url_title }}</a>
-{% else %}
-    <p>Visita: <a href="http://carlessanagustin.com/">carlessanagustin.com</a>
-{% endif %}
-
-<p><img src="http://www.socallinuxexpo.org/scale12x-supporting/default/files/logos/AnsibleLogo_transparent_web.png" width="497" height="393"></p>
-</body>
-</html>
 ```
-
-* Salvamos y salimos con *:x*
-* Ejecutamos...
-
-```shell
-ansible-playbook install.yml -i hosts/all -k
+ansible-playbook \
+    -i hosts/all request.yml
 ```
 
 * ¿Que sucede?
-* Abrimos un navegador y vamos a http://docs.ansible.com/ansible/template_module.html
-* Abrimos un navegador y vamos a http://jinja.pocoo.org/docs/dev/
+* Descargamos el repositorio del código, instalamos dependencias y iniciamos aplicación.
+* Añadimos al archivo `request.yml`
 
-## Roles
+```yaml
+    - name: Descargamos el repositorio
+      git:
+        repo: https://github.com/xescuder/ait.git
+        dest: "{{ ansible_env.HOME}}/ait"
+        version: 9abd6d6ac6533f0cb03274fb252f723373cbb1d9
+        force: yes
 
-```shell
-mkdir roles && cd roles
-ansible-galaxy init nginx
-tree nginx
+    - name: Accion "npm install pm2"
+      npm:
+        name: "{{ item }}"
+        path: "{{ ansible_env.HOME}}/ait/node_modules"
+        state: latest
+      with_items:
+        - pm2
+
+    - name: Run app
+      command: node_modules/pm2/bin/pm2 start server/start.js
+      args:
+        chdir: "{{ ansible_env.HOME}}/ait"
+```
+
+* Ejecutamos
+
+```
+ansible-playbook \
+    -i hosts/all request.yml
 ```
 
 * ¿Que sucede?
-
-```shell
-vim nginx/tasks/main.yml
-```
-
-* Introducimos el siguiente texto
-
-```yaml
----
-- name: instalamos nginx
-  become: true
-  apt: name={{ item }} state=latest update_cache=yes cache_valid_time=3600
-  when: ansible_os_family == "Debian"
-  with_items: {{ packages }}
-
-# Equivalente de "update apt-get", si la última actualización es de hace más de 3600 segundos
-
-- name: despliegue de la aplicacion
-  become: true
-  template: src={{ template_name }} dest={{ destination }} owner=root group=root mode=0644 backup=yes
-
-- name: ls /usr/share/nginx/html/
-  command: ls /usr/share/nginx/html/
-  register: contents
-
-- name: mostrar variable
-  debug: var=contents.stdout_lines      
-```
-
-* Salvamos y salimos con *:x*
-
-```
-vim nginx/defaults/main.yml
-```
-
-* Introducimos el siguiente texto
-
-```yaml
----
-packages:
-  - nginx
-  - vim
-  - curl
-template_name: "index.html.j2"
-destination: /usr/share/nginx/html/index.html
-url: "http://www.chiquitoipsum.com/"
-url_title: "chiquitoipsum"
-condicion: True
-demo: Ansible     
-```
-
-* Salvamos y salimos con *:x*
-
-```shell
-cp ../index.html.j2 nginx/templates/
-vim ../install2.yml
-```
-
-* Introducimos el siguiente texto
-
-```yaml
----
-- hosts: zape
-
-  roles:
-    - nginx
-```
-
-* Salvamos y salimos con *:x*
-
-```
-cd ..
-ansible-playbook install2.yml -i hosts/all -k
-```
 
 ## Comandos
 
@@ -364,10 +327,10 @@ ansible-playbook playbook.yml
 * Otros comandos incluidos en la instalación...
 
 ```shell
+ansible-vault [create|decrypt|edit|encrypt|rekey|view] [--help] [options] file_name
 ansible-doc [options] [module...]
 ansible-galaxy [init|info|install|list|remove] [--help] [options] ...
 ansible-pull [options] [playbook.yml]
-ansible-vault [create|decrypt|edit|encrypt|rekey|view] [--help] [options] file_name
 ```
 
 # Preguntas y respuestas
