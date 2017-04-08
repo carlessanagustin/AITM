@@ -14,8 +14,15 @@ Sigue las instrucciones paso a paso con la ayuda del instructor. Las prácticas 
 
 ## Configuración
 
+* Iniciamos el entorno
+
 ```shell
 vagrant up && vagrant ssh zape
+```
+
+* Preparamos la carpeta de trabajo
+
+```shell
 cd /vagrant && mkdir -p ansible/hosts && cd ansible
 sudo cp /etc/ansible/ansible.cfg .
 vim ansible.cfg
@@ -23,7 +30,7 @@ vim ansible.cfg
 
 > Tambien podemos descargar la configuración del respositorio oficial: https://github.com/ansible/ansible/blob/devel/examples/ansible.cfg
 
-* Aseguramos que tenemos la siguiente configuración
+* Aseguramos que tenemos la siguiente configuración en `ansible.cfg`
 
 ```python
 remote_user = ubuntu
@@ -44,9 +51,6 @@ host_key_checking = False
 * Creamos el archivo `hosts/all`
 
 ```ini
-[localhost]
-127.0.0.1
-
 [zape]
 192.168.32.11
 
@@ -54,13 +58,6 @@ host_key_checking = False
 192.168.32.12
 ```
 
-* Ejecutamos
-
-```shell
-ansible localhost -i hosts/all -m ping
-```
-
-* ¿Que sucede?
 * Ejecutamos
 
 ```shell
@@ -103,9 +100,6 @@ root# cat ~/.vagrant.d/boxes/ubuntu-VAGRANTSLASH-xenial64/20170331.0.0/virtualbo
 * Cambiamos el archivo `hosts/all`
 
 ```ini
-[localhost]
-127.0.0.1
-
 [zape]
 192.168.32.11
 
@@ -174,7 +168,6 @@ ansible-playbook \
 ```
 
 * ¿Que sucede?
-* TODO: ansible-vault
 * Instalamos los paquetes necesarios para arrancar nuestro código.
 * Añadimos al archivo `request.yml`
 
@@ -265,14 +258,6 @@ nodejs_url: "https://rpm.nodesource.com/setup_4.x"
 nodejs_url: "https://deb.nodesource.com/setup_4.x "
 ```
 
-* (opcional) Securizar ficheros
-
-```shell
-ansible-vault encrypt \
-    --output=SECURErequest.yml \
-    request.yml
-```
-
 * Ejecutamos
 
 ```
@@ -314,6 +299,14 @@ ansible-playbook \
 ```
 
 * ¿Que sucede?
+* (opcional) Securizar ficheros
+
+```shell
+ansible-vault encrypt \
+    --output=SECURErequest.yml \
+    request.yml
+```
+* (opcional) ¿Que sucede?
 
 ## Comandos
 
@@ -322,12 +315,12 @@ ansible-playbook \
 ```shell
 ansible <host-pattern> [options]
 ansible-playbook playbook.yml
+ansible-vault [create|decrypt|edit|encrypt|rekey|view] [--help] [options] file_name
 ```
 
 * Otros comandos incluidos en la instalación...
 
 ```shell
-ansible-vault [create|decrypt|edit|encrypt|rekey|view] [--help] [options] file_name
 ansible-doc [options] [module...]
 ansible-galaxy [init|info|install|list|remove] [--help] [options] ...
 ansible-pull [options] [playbook.yml]
