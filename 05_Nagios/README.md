@@ -26,7 +26,7 @@ vim conf.d/AITM/zape.cfg
 define host {
     host_name               zape.AITM-UPC.cat
     alias                   zape
-    address                 192.168.32.11
+    address                 192.168.56.11
     max_check_attempts      3
     check_period            24x7
     check_command           check-host-alive
@@ -151,9 +151,9 @@ service nagios3 reload
 * Abrir un nuevo Git Bash (Windows) o Terminal (Linux/MacOSX)
 
 ```shell
-/usr/lib/nagios/plugins/check_http -I 192.168.32.10
-/usr/lib/nagios/plugins/check_http -I 192.168.32.11
-/usr/lib/nagios/plugins/check_http -I 192.168.32.12
+/usr/lib/nagios/plugins/check_http -I 192.168.56.10
+/usr/lib/nagios/plugins/check_http -I 192.168.56.11
+/usr/lib/nagios/plugins/check_http -I 192.168.56.12
 ```
 
 * Abrir http://localhost:8082/nagios3/ > Current Status > Services
@@ -206,7 +206,7 @@ define service {
 ```
 
 ```shell
-/usr/lib/nagios/plugins/check_nrpe -H 192.168.32.10 -c check_load
+/usr/lib/nagios/plugins/check_nrpe -H 192.168.56.10 -c check_load
 ```
 
 * ¿Que sucede?
@@ -220,7 +220,7 @@ vim /etc/nagios/nrpe.cfg
 * Añadimos...
 
 ```shell
-allowed_hosts=127.0.0.1, 192.168.32.0/24
+allowed_hosts=127.0.0.1, 192.168.56.0/24
 ```
 
 * Buscar y revisar: command[check_users] ...
@@ -234,7 +234,7 @@ service nagios-nrpe-server start
 * En **zape**:
 
 ```shell
-/usr/lib/nagios/plugins/check_nrpe -H 192.168.32.10 -c check_load
+/usr/lib/nagios/plugins/check_nrpe -H 192.168.56.10 -c check_load
 ```
 
 * ¿Que sucede?

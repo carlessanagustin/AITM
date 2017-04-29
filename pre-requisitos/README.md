@@ -2,7 +2,7 @@
 
 Esta carpeta contiene los ficheros necesarios para generar los entornos de prácticas. El entorno de pruebas esta compuesto de tres máquinas virtuales como se muestra en el siguiente diagrama:
 
-![Entorno de prácticas](./vagrant_environment.png)
+![Entorno de prácticas](./entorno de practicas.png)
 
 ### Software necesario
 

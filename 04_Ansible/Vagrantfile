@@ -6,6 +6,7 @@ Vagrant.configure("2") do |config|
   config.vm.provider "virtualbox" do |vb|
     vb.memory = 512
     vb.cpus = 1
+    vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
   end
   config.vm.boot_timeout = 60
   config.ssh.username = "ubuntu"
@@ -14,14 +15,14 @@ Vagrant.configure("2") do |config|
   config.vm.define "zape" do |zape|
     zape.vm.host_name = "zape"
     zape.vm.box = "zape"
-    zape.vm.network "private_network", ip: "192.168.32.11", virtualbox__intnet: true, auto_config: true
+    zape.vm.network "private_network", ip: "192.168.56.11", virtualbox__intnet: true, auto_config: true
   end
 
 #### BASE
   config.vm.define "base" do |base|
     base.vm.host_name = "base"
     base.vm.box = "base"
-    base.vm.network "private_network", ip: "192.168.32.12", virtualbox__intnet: true, auto_config: true
+    base.vm.network "private_network", ip: "192.168.56.12", virtualbox__intnet: true, auto_config: true
     base.vm.network "forwarded_port", guest: 3000, host: 3000, auto_correct: true
   end
 end

@@ -31,15 +31,36 @@ vagrant up
 * ¿Que sucede?
 * Continuamos...
 
-```
+```shell
 vagrant box add base ../../base-ubuntu-trusty-64.box
 vagrant box list
-vagrant init base -f
+vagrant init base -fm
+```
+
+* Editamos el fichero *Vagrantfile*
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.vm.box = "base"
+  config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+  config.vm.boot_timeout = 60
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 512
+    v.cpus = 1
+    v.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+  end
+end
+```
+
+* Ejecutamos
+
+```shell
 vagrant up
 ```
 
 * ¿Que sucede?
-* También podemos usar estos comandos
+* (opcional) También podemos usar estos comandos
 
 ```
 vagrant init ubuntu/trusty64 -m -o Vagrantfile-trusty64
@@ -69,7 +90,7 @@ vagrant ssh -c "uname -a"
 ## 2. El fichero Vagrantfile
 
 ```
-vagrant ssh -c "ifconfig"
+vagrant ssh -c "ip addr"
 ```
 
 * ¿Que sucede?
@@ -82,8 +103,17 @@ vim Vagrantfile
 * ¿Que sucede?
 
 ```ruby
-Vagrant.configure(2) do |config|
+Vagrant.configure("2") do |config|
   config.vm.box = "base"
+  config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+  config.vm.boot_timeout = 60
+  config.ssh.username = "ubuntu"
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 512
+    v.cpus = 1
+    v.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+  end
 end
 ```
 
@@ -91,7 +121,7 @@ end
 
 ```ruby
 config.vm.network :private_network,
-                ip: "192.168.1.100",
+                ip: "192.168.56.100",
                 virtualbox__intnet: true,
                 auto_config: true
 ```
@@ -100,7 +130,7 @@ config.vm.network :private_network,
 
 ```
 vagrant reload
-vagrant ssh -c "ifconfig"
+vagrant ssh -c "ip addr"
 ```
 
 * ¿Que sucede?
@@ -299,7 +329,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
 ##### NETWORK #####
     zipi.vm.network "forwarded_port", host: 8080, guest: 80, auto_correct: true
-    zipi.vm.network "private_network", ip: "192.168.32.10", virtualbox__intnet: true, auto_config: true
+    zipi.vm.network "private_network", ip: "192.168.56.10", virtualbox__intnet: true, auto_config: true
 ##### NETWORK #####
   end
 
@@ -315,7 +345,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
 ##### NETWORK #####
     zape.vm.network "forwarded_port", host: 8082, guest: 80, auto_correct: true
-    zape.vm.network "private_network", ip: "192.168.32.11", virtualbox__intnet: true, auto_config: true
+    zape.vm.network "private_network", ip: "192.168.56.11", virtualbox__intnet: true, auto_config: true
 ##### NETWORK #####
   end
 end
@@ -331,7 +361,7 @@ vagrant up --provision
 
 ```
 vagrant ssh zape
-    curl http://192.168.32.10
+    curl http://192.168.56.10
 ```
 
 * Abrimos un navegador y vamos a http://localhost:8080/

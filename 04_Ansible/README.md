@@ -52,10 +52,10 @@ host_key_checking = False
 
 ```ini
 [zape]
-192.168.32.11
+192.168.56.11
 
 [base]
-192.168.32.12
+192.168.56.12
 ```
 
 * Ejecutamos
@@ -101,10 +101,10 @@ root# cat ~/.vagrant.d/boxes/ubuntu-VAGRANTSLASH-xenial64/20170331.0.0/virtualbo
 
 ```ini
 [zape]
-192.168.32.11
+192.168.56.11
 
 [base]
-192.168.32.12
+192.168.56.12
 
 [all:vars]
 ansible_connection=ssh
@@ -362,7 +362,7 @@ The key's randomart image is:
 |          + . . o|
 |         +.   .o |
 +-----------------+
-ssh-copy-id -i /home/vagrant/.ssh/id_rsa_ansible.pub vagrant@192.168.32.11
+ssh-copy-id -i /home/vagrant/.ssh/id_rsa_ansible.pub vagrant@192.168.56.11
 ```
 
 ---

@@ -17,7 +17,7 @@ Para las prácticas es necesario de algunos requisitos prévios que se encuentra
 
 Esta es la infraestructura de practicas diseñada:
 
-![Entorno de prácticas](./pre-requisitos/vagrant_environment.png)
+![Entorno de prácticas](./pre-requisitos/entorno de practicas.png)
 
 ---
 

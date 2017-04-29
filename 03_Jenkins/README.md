@@ -103,7 +103,7 @@ ubuntu@zape:~$ sudo apt-get update && \
 * Labels: `test, ubuntu, debian, linux`
 * Usage: Utilize this node as much as possible
 * Launch method: Launch slave agents on Unix machines via SSH
-* Host: `192.168.32.11`
+* Host: `192.168.56.11`
 * Credentials > Add (C)
 * C: Kind: Username with password
 * C: Scope System
@@ -122,7 +122,7 @@ ubuntu@zape:~$ sudo apt-get update && \
 * Freestyle project: Enabled
 * Restrict where this project can be run: Enabled
 * Label Expression: `test_environment`
-* Build > Add build step > Execute Shell: ifconfig
+* Build > Add build step > Execute Shell: ip addr
 * Apply
 * Build Now
 
