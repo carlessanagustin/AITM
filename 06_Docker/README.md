@@ -201,7 +201,7 @@ $ curl localhost:5000
 ```
 
 * ¿Que sucede?
-* Abrimos un navegador y vamos a http://IP_publica_de_la_vm_de_vagrant:5000/
+* Abrimos un navegador y vamos a http://127.0.0.1:5000/
 * ¿Que sucede?
 
 ```shell
@@ -326,7 +326,7 @@ $ docker exec composetest_nginx_1 cat /etc/hosts
 $ docker exec composetest_tomcatapp1_1 ip a
 $ docker exec composetest_tomcatapp2_1 ip a
 $ docker exec composetest_tomcatapp3_1 ip a
-$ curl http://localhost/sample/
+$ curl http://127.0.0.1/sample/
 ```
 
 * ¿Que sucede?
