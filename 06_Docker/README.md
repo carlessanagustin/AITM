@@ -12,8 +12,7 @@ Sigue las instrucciones paso a paso con la ayuda del instructor. Las prácticas 
 * Iniciamos máquina virtual:
 
 ```shell
-vagrant up base
-vagrant ssh base
+vagrant up && vagrant ssh
 ```
 
 * Abrimos otro terminal siguiendo los pasos anteriores hasta obtener algo similar:
@@ -25,25 +24,24 @@ vagrant ssh base
 
 ```shell
 T2$ docker ps
-T2$ docker ps -a
 ```
 
 ## "hello world"
 
 ```shell
-sudo docker run hello-world
+$ sudo docker run hello-world
 ```
 
 * ¿Que sucede?
 
 ```shell
 $ docker run -it busybox
-$ ls
+$ ls /
 $ hostname
 $ ps aux
-T2$ docker ps
 T2$ docker ps -a
 $ exit
+T2$ docker images
 ```
 
 * ¿Que sucede?
@@ -98,11 +96,14 @@ docker rm $(docker ps -aq)
 
 Compondremos un servidor de aplicaciones Python/Flask con una base de datos Redis.
 
-### Preparación del entorno (ya realizado por el instructor)
+### Preparación del entorno
 
 ```shell
 docker pull redis
 docker pull python:2.7
+docker pull tomcat
+docker pull nginx
+
 ```
 
 ## Ficheros de configuración
@@ -110,7 +111,7 @@ docker pull python:2.7
 * El script de Docker Compose:
 
 ```shell
-cd /carpeta/de/trabajo/
+mkdir -p /vagrant/aitm-06_Docker && cd /vagrant/aitm-06_Docker
 vim docker-compose.yml
 ```
 
@@ -193,7 +194,7 @@ redis
 
 ```shell
 $ docker-compose up -d
-T2$ cd /carpeta/de/trabajo/
+T2$ cd /vagrant/aitm-06_Docker
 T2$ docker-compose ps
 T2$ docker-compose logs
 $ curl localhost:5000
@@ -212,13 +213,6 @@ docker-compose stop
 ## Composiciones avanzadas de Docker
 
 Compondremos varios servidores de aplicación Tomcat con balanceador de carga Nginx.
-
-### Preparación del entorno (ya realizado por el instructor)
-
-```shell
-docker pull tomcat
-docker pull nginx
-```
 
 ## Ficheros de configuración
 

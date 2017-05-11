@@ -11,5 +11,6 @@ htpasswd.users
 .DS_Store
 .vagrant
 
+aitm-06_Docker
 
 TODO.md
