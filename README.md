@@ -4,7 +4,7 @@ Este curso incluye prácticas de iniciación a los siguientes softwares:
 
 * [Git](01_Git)
 * [Vagrant](02_Vagrant)
-* [Jenkins](03_Jenkins)
+* ~~[Jenkins](03_Jenkins)~~ (DEPRECATED)
 * [Ansible](04_Ansible)
 * [Nagios](05_Nagios)
 * [Docker](06_Docker)
