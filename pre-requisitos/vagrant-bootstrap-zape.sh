@@ -1,18 +1,5 @@
 #!/usr/bin/env bash
 
-########################### JENKINS NODE ###########################
-
-# upgrading system
-apt-get update
-apt-get -y upgrade
-
-# language settings
-apt-get -y install language-pack-en
-locale-gen en_GB.UTF-8
-
-# jenkins node requirements
-apt-get -y install openjdk-8-jre openjdk-8-jdk
-
 ########################### NAGIOS SERVER ###########################
 
 MAILNAME="zipi.com"
