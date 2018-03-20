@@ -20,26 +20,28 @@ Vagrant.configure("2") do |config|
 #  end
 
   config.vm.define "zipi" do |zipi|
-    zipi.ssh.username = "ubuntu"
+    #zipi.ssh.username = "ubuntu"
     zipi.vm.host_name = "zipi"
     zipi.vm.box = "ubuntu/xenial64"
     #zipi.vm.box_version = "20170331.0.0"
     zipi.vm.box_version = "20180306.0.0"
     #zipi.vm.box = "base"
     zipi.vm.provision :shell, :path => "vagrant-bootstrap-base.sh"
-    zipi.vm.provision :shell, :path => "vagrant-bootstrap-zipi.sh"
+    zipi.vm.provision :shell, :path => "vagrant-bootstrap-docker.sh"
+    zipi.vm.provision :shell, :path => "vagrant-bootstrap-nagios_node.sh"
     zipi.vm.network "private_network", ip: "192.168.56.10", virtualbox__intnet: true, auto_config: true
   end
 
   config.vm.define "zape" do |zape|
-    zape.ssh.username = "ubuntu"
+    #zape.ssh.username = "ubuntu"
     zape.vm.host_name = "zape"
     zape.vm.box = "ubuntu/xenial64"
     #zape.vm.box_version = "20170331.0.0"
     zape.vm.box_version = "20180306.0.0"
     #zape.vm.box = "base"
     zape.vm.provision :shell, :path => "vagrant-bootstrap-base.sh"
-    zape.vm.provision :shell, :path => "vagrant-bootstrap-zape.sh"
+    zape.vm.provision :shell, :path => "vagrant-bootstrap-ansible.sh"
+    zape.vm.provision :shell, :path => "vagrant-bootstrap-nagios_server.sh"
     zape.vm.network "private_network", ip: "192.168.56.11", virtualbox__intnet: true, auto_config: true
   end
 end

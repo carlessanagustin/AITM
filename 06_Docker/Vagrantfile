@@ -9,15 +9,15 @@ Vagrant.configure("2") do |config|
     vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
   end
   config.vm.boot_timeout = 60
-  config.ssh.username = "ubuntu"
+  #config.ssh.username = "ubuntu"
 
 #### DOCKER
-  config.vm.define "base" do |base|
-    base.vm.host_name = "base"
-    base.vm.box = "base"
-    base.vm.network "private_network", ip: "192.168.56.12", virtualbox__intnet: true, auto_config: true
-    base.vm.network "forwarded_port", guest: 80, host: 8081, host_ip: "127.0.0.1", auto_correct: true
-    base.vm.network "forwarded_port", guest: 5000, host: 5000, host_ip: "127.0.0.1", auto_correct: true
-    base.vm.network "forwarded_port", guest: 6379, host: 6379, host_ip: "127.0.0.1", auto_correct: true
+  config.vm.define "zipi" do |zipi|
+    zipi.vm.host_name = "zipi"
+    zipi.vm.box = "zipi"
+    zipi.vm.network "private_network", ip: "192.168.56.10", virtualbox__intnet: true, auto_config: true
+    zipi.vm.network "forwarded_port", guest: 80, host: 8081, host_ip: "127.0.0.1", auto_correct: true
+    zipi.vm.network "forwarded_port", guest: 5000, host: 5000, host_ip: "127.0.0.1", auto_correct: true
+    zipi.vm.network "forwarded_port", guest: 6379, host: 6379, host_ip: "127.0.0.1", auto_correct: true
   end
 end

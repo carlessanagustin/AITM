@@ -46,7 +46,10 @@ vagrant box add base ../../ubuntu-trusty-64-base.box
 * Una vez creada la 1a màquina virtual base, pasamos a crear los entornos de trabajo:
 
 ```
+cd pre-pre-requisitos
 vagrant up zipi zape --provision
+
+./create_boxes.sh
 ```
 
 * Una vez creados, podemos pasar a exportar los ficheros box:
