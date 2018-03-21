@@ -21,7 +21,7 @@ Hay que revisar los permisos de escritura en carpeta del usuario activo.
 
 * Abrir Git Bash (Windows) o Terminal (Linux/MacOSX)
 
-```
+```shell
 mkdir aitm-vagrant
 cd aitm-vagrant
 vagrant init
@@ -29,19 +29,53 @@ vagrant up
 ```
 
 * ¿Que sucede?
+* *Miramos: Vagrantfile*
 * Continuamos...
 
 ```shell
-vagrant box add base ../../base-ubuntu-trusty-64.box
+vagrant init ubuntu/xenial64 -f
+vagrant up
+```
+
+* ¿Que sucede?
+* *Miramos Vagrantfile + `vagrant status` + VirtualBox*
+* Continuamos...
+
+```shell
+vagrant ssh
+    uname -a
+    ls /
+    exit
+```
+
+Y tambien...
+
+```shell
+vagrant ssh -c "uname -a"
+```
+
+* ¿Que sucede?
+* Aparte de *up* existen otros comandos: `vagrant up|suspend|resume|halt|reload`
+* Continuamos...
+
+```
+vagrant destroy -f
+vagrant status
+```
+
+## 2. Las *boxes*
+
+```shell
+vagrant box add zipi ../../../ubuntu-xenial-64-zipi.box
 vagrant box list
-vagrant init base -fm
+vagrant init zipi -fm
 ```
 
 * Editamos el fichero *Vagrantfile*
 
 ```ruby
 Vagrant.configure("2") do |config|
-  config.vm.box = "base"
+  config.vm.box = "zipi"
   config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
   config.vm.boot_timeout = 60
 
@@ -57,76 +91,42 @@ end
 
 ```shell
 vagrant up
-```
-
-* ¿Que sucede?
-* (opcional) También podemos usar estos comandos
-
-```
-vagrant init ubuntu/trusty64 -m -o Vagrantfile-trusty64
-vagrant init precise32 http://files.vagrantup.com/precise32.box -m -o Vagrantfile-precise
-```
-
-* Aparte de *up* existen otros
-
-```
-vagrant up|suspend|resume|halt|reload
-```
-
-* Continuamos...
-
-```
-vagrant ssh
-    uname -a
-    exit
-```
-
-```
+vagrant ssh -c "uname -a"
 vagrant ssh -c "uname -a"
 ```
 
 * ¿Que sucede?
+* También podemos importar de remoto `vagrant init precise32 http://files.vagrantup.com/precise32.box -m -o Vagrantfile-precise`
 
-## 2. El fichero Vagrantfile
+## 3. El fichero Vagrantfile
 
 ```
 vagrant ssh -c "ip addr"
 ```
 
 * ¿Que sucede?
-* Editamos el fichero *Vagrantfile*
-
-```
-vim Vagrantfile
-```
-
-* ¿Que sucede?
+* Editamos *Vagrantfile*
 
 ```ruby
 Vagrant.configure("2") do |config|
-  config.vm.box = "base"
+  config.vm.box = "zipi"
   config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
   config.vm.boot_timeout = 60
-  config.ssh.username = "ubuntu"
 
   config.vm.provider "virtualbox" do |v|
     v.memory = 512
     v.cpus = 1
     v.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
   end
-end
-```
-
-* Añadimos...
-
-```ruby
-config.vm.network :private_network,
+  
+  config.vm.network :private_network,
                 ip: "192.168.56.100",
                 virtualbox__intnet: true,
                 auto_config: true
+end
 ```
 
-* Salvamos y salimos con *:x*
+* Ejecutamos
 
 ```
 vagrant reload
@@ -134,70 +134,100 @@ vagrant ssh -c "ip addr"
 ```
 
 * ¿Que sucede?
-
-## 3. Más opciones para Vagrantfile
+* Continuamos...
 
 ```
 mkdir extra
-vim Vagrantfile
+touch extra/this_is_a_test
 ```
-
-* Añadimos...
+* Editamos *Vagrantfile*
 
 ```ruby
-config.vm.host_name = "zipi"
-config.vm.provider "virtualbox" do |vb|
-  vb.memory = 512
-  vb.cpus = 1
-end
-config.vm.synced_folder "./extra",
+Vagrant.configure("2") do |config|
+  config.vm.box = "zipi"
+  config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+  config.vm.boot_timeout = 60
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 512
+    v.cpus = 1
+    v.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+  end
+
+  config.vm.network :private_network,
+                ip: "192.168.56.100",
+                virtualbox__intnet: true,
+                auto_config: true
+
+  config.vm.synced_folder "./extra",
                 "/vagrant-extra",
-                owner: "ubuntu",
-                group: "ubuntu",
+                owner: "vagrant",
+                group: "vagrant",
                 mount_options: ["dmode=775,fmode=664"]
+end
 ```
 
-* Salvamos y salimos con *:x*
+* Ejecutamos
 
 ```
 vagrant reload
 vagrant ssh
     hostname
-    free
     ls /
     ls /vagrant
     touch /vagrant-extra/extra-file.txt
+    ls /vagrant-extra
     exit
 ls
 ls extra
 ```
 
 * ¿Que sucede?
-
-*A fecha de Enero del 2016 también: VMware, Docker, Hyper-V & Custom Provider.*
-(fuente: https://www.vagrantup.com/docs/providers/)
+* Otros: [Available Vagrant Plugins](https://github.com/hashicorp/vagrant/wiki/Available-Vagrant-Plugins)
 
 ## 4. Aprovisionamiento
 
-* Editamos el fichero *Vagrantfile*
-
 ```
-vim Vagrantfile
+vagrant ssh -c "whereis apachectl"
 ```
 
-* Añadimos...
+* Editamos *Vagrantfile*
 
 ```ruby
-config.vm.provision :shell, :inline => "apt-get update && apt-get -y install apache2"
+Vagrant.configure("2") do |config|
+  config.vm.box = "zipi"
+  config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+  config.vm.boot_timeout = 60
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 512
+    v.cpus = 1
+    v.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+  end
+
+  config.vm.network :private_network,
+                ip: "192.168.56.100",
+                virtualbox__intnet: true,
+                auto_config: true
+
+  config.vm.synced_folder "./extra",
+                "/vagrant-extra",
+                owner: "vagrant",
+                group: "vagrant",
+                mount_options: ["dmode=775,fmode=664"]
+
+  config.vm.provision :shell, :inline => "apt-get update && apt-get -y install apache2"
+end
 ```
-* Salvamos y salimos con *:x*
+* Ejecutamos
 
 ```
 vagrant provision
+vagrant ssh -c "whereis apachectl"
 ```
 
 * ¿Que sucede?
-* Aparte de *provision* podemos...
+* (Opcional) Aparte de *provision* podemos...
 
 ```
 vagrant up --provision
@@ -205,80 +235,118 @@ vagrant up --no-provision
 vagrant reload --provision
 ```
 
-* Editamos el fichero *Vagrantfile*
-
-```
-vim Vagrantfile
-```
-* Intercambiamos *config.vm.provision :shell...* por
+* Editamos *Vagrantfile*
 
 ```ruby
-config.vm.provision :shell, :path => "bootstrap.sh"
+Vagrant.configure("2") do |config|
+  config.vm.box = "zipi"
+  config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+  config.vm.boot_timeout = 60
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 512
+    v.cpus = 1
+    v.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+  end
+
+  config.vm.network :private_network,
+                ip: "192.168.56.100",
+                virtualbox__intnet: true,
+                auto_config: true
+
+  config.vm.synced_folder "./extra",
+                "/vagrant-extra",
+                owner: "vagrant",
+                group: "vagrant",
+                mount_options: ["dmode=775,fmode=664"]
+
+#  config.vm.provision :shell, :inline => "apt-get update && apt-get -y install apache2"
+  config.vm.provision :shell, :path => "bootstrap.sh"
+end
 ```
 
-* Salvamos y salimos con *:x*
-* Editamos el fichero *bootstrap.sh*
+* Editamos *bootstrap.sh*
 
 ```
-vim bootstrap.sh
-```
-
-* Añadimos...
-
-```
-#!/bin/sh
+#!/usr/bin/env bash
 apt-get update
-apt-get -y install apache2
+apt-get -y install htop
 ```
 
 * Salvamos y salimos con *:x*
 
 ```
+vagrant ssh -c "whereis htop"
 vagrant provision
+vagrant ssh -c "whereis htop"
 ```
 
 * ¿Que sucede?
-
-* Otros métodos de aprovisionamiento
+* (opcional) Otros métodos de aprovisionamiento
 
 ```
-# inline
-config.vm.provision :shell,
-            :inline => "apt-get update && apt-get -y upgrade"
 # ansible
 config.vm.provision "ansible" do |ansible|
   ansible.playbook = "provisioning/playbook.yml"
 end
 ```
 
-*A fecha de Enero del 2016 también: File, Shell, Ansible, Ansible Local, CFEngine, Chef Solo, Chef Zero, Chef Client, Chef Apply, Docker, Puppet Apply, Puppet Agent, Salt.*
-(fuente: https://www.vagrantup.com/docs/provisioning/)
+* Más: [Provisioning](https://www.vagrantup.com/docs/provisioning/)
 
 ## 5. Reenvío de puertos
 
 En el paso anterior hemos instalado el servidor web Apache. Vamos a ver su homepage.
 
-* Abrimos un navegador y vamos a http://192.168.1.100
+```
+vagrant ssh -c "systemctl status apache2.service"
+vagrant ssh -c "ip addr"
+```
+
+* Abrimos un navegador y vamos a
+	* http://192.168.56.100/
+	* http://10.0.2.15/
+	* http://172.17.0.1/
 * ¿Que sucede?
-* Editamos el fichero *Vagrantfile*
-
-```
-vim Vagrantfile
-```
-
-* Añadimos...
+* Editamos *Vagrantfile*
 
 ```ruby
-config.vm.network "forwarded_port",
+Vagrant.configure("2") do |config|
+  config.vm.box = "zipi"
+  config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+  config.vm.boot_timeout = 60
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 512
+    v.cpus = 1
+    v.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+  end
+
+  config.vm.network :private_network,
+                ip: "192.168.56.100",
+                virtualbox__intnet: true,
+                auto_config: true
+
+  config.vm.synced_folder "./extra",
+                "/vagrant-extra",
+                owner: "vagrant",
+                group: "vagrant",
+                mount_options: ["dmode=775,fmode=664"]
+
+#  config.vm.provision :shell, :inline => "apt-get update && apt-get -y install apache2"
+  config.vm.provision :shell, :path => "bootstrap.sh"
+
+  config.vm.network "forwarded_port",
                 guest: 80,
                 host: 8080,
                 auto_correct: true
+end
 ```
 
-* Salvamos y salimos con *:x*
+* Ejecutamos
 
 ```
 vagrant reload
+vagrant ssh -c "systemctl status apache2.service"
 ```
 
 * Abrimos un navegador y vamos a http://localhost:8080
@@ -296,7 +364,6 @@ vagrant box list
 ```
 
 * ¿Que sucede?
-
 * Otros comandos útiles
 
 ```
@@ -307,59 +374,48 @@ vagrant box remove|update [name]
 
 ```
 mv Vagrantfile Vagrantfile-single
-vim Vagrantfile
+vagrant box add zape ../../../ubuntu-xenial-64-zape.box
+vagrant box list
+vagrant status
 ```
 
-* Añadimos...
+* Editamos *Vagrantfile*
 
 ```ruby
-VAGRANTFILE_API_VERSION = "2"
-Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+Vagrant.configure("2") do |config|
   config.vm.boot_timeout = 60
 
   config.vm.define "zipi" do |zipi|
-##### PROVISION #####
-    zipi.vm.provision :shell, :path => "bootstrap.sh"
-##### PROVISION #####
+    zipi.vm.provision :shell, :inline => "systemctl mask apt-daily.service && apt-get update && apt-get -y install apache2"
     zipi.vm.host_name = "zipi"
-    zipi.vm.box = "base"
+    zipi.vm.box = "zipi"
     zipi.vm.provider "virtualbox" do |vb|
       vb.memory = 512
       vb.cpus = 1
     end
-##### NETWORK #####
     zipi.vm.network "forwarded_port", host: 8080, guest: 80, auto_correct: true
     zipi.vm.network "private_network", ip: "192.168.56.10", virtualbox__intnet: true, auto_config: true
-##### NETWORK #####
   end
 
   config.vm.define "zape" do |zape|
-##### PROVISION #####
-    zape.vm.provision :shell, :inline => "apt-get update && apt-get -y install curl"
-##### PROVISION #####
+    zape.vm.provision :shell, :inline => "systemctl mask apt-daily.service && apt-get update && apt-get -y install curl wget lynx"
     zape.vm.host_name = "zape"
-    zape.vm.box = "base"
+    zape.vm.box = "zape"
     zape.vm.provider "virtualbox" do |vb|
       vb.memory = 512
       vb.cpus = 1
     end
-##### NETWORK #####
     zape.vm.network "forwarded_port", host: 8082, guest: 80, auto_correct: true
     zape.vm.network "private_network", ip: "192.168.56.11", virtualbox__intnet: true, auto_config: true
-##### NETWORK #####
   end
 end
 ```
 
-* Salvamos y salimos con *:x*
+* Ejecutamos
 
 ```
-vagrant up --provision
-```
-
-* ¿Que sucede?
-
-```
+vagrant up --no-provision
+vagrant provision
 vagrant ssh zape
     curl http://192.168.56.10
 ```
@@ -372,7 +428,6 @@ vagrant ssh zape
 ```
     exit
 vagrant destroy -f
-vagrant box remove base
 ```
 
 # Preguntas y respuestas
