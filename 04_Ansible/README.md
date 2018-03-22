@@ -4,7 +4,7 @@ Vamos a conocer ANSIBLE; herramienta para el despliegue de aplicaciones y gesti�
 
 Sigue las instrucciones paso a paso con la ayuda del instructor. Las prácticas de realizarán en una máquina Ubuntu de Vagrant.
 
-## Requisitos previos: Entorno local
+## 0. Requisitos previos: Entorno local
 
 * Instalar Ansible - http://docs.ansible.com/ansible/intro_installation.html
 
@@ -12,32 +12,42 @@ Sigue las instrucciones paso a paso con la ayuda del instructor. Las prácticas 
 
 * Abrir Git Bash (Windows) o Terminal (Linux/MacOSX)
 
-## Configuración
+## 1. Configuración de SSH
 
 * Iniciamos el entorno
 
 ```shell
+vagrant ssh-config
+mkdir -p ansible/keys
+cp ~/.vagrant.d/boxes/zape/0/virtualbox/vagrant_private_key ./ansible/keys/vagrant_private_key_zape
+cp ~/.vagrant.d/boxes/zipi/0/virtualbox/vagrant_private_key ./ansible/keys/vagrant_private_key_zipi
 vagrant up && vagrant ssh zape
 ```
 
-* Preparamos la carpeta de trabajo
+* En otra ventana de terminal ejecutamos:
+
+```
+vagrant ssh zipi
+```
+
+## 2. Configuración de Ansible
+
+* Preparamos la carpeta de trabajo (zape)
 
 ```shell
-cd /vagrant && mkdir -p ansible/hosts && cd ansible
+cd /vagrant/ansible && mkdir -p hosts
 sudo cp /etc/ansible/ansible.cfg .
-vim ansible.cfg
 ```
 
 > Tambien podemos descargar la configuración del respositorio oficial: https://github.com/ansible/ansible/blob/devel/examples/ansible.cfg
 
+* Editamos `ansible.cfg`
 * Aseguramos que tenemos la siguiente configuración en `ansible.cfg`
 
 ```python
-remote_user = ubuntu
+remote_user = vagrant
 host_key_checking = False
 ```
-
-* Salvamos y salimos con *:x*
 
 > NOTA: Orden de prioridad del fichero de configuración:
 1. ANSIBLE_CONFIG (variable de entorno POSIX)
@@ -45,38 +55,35 @@ host_key_checking = False
 3. ~/.ansible.cfg (en el directorio home del usuario ejecutor)
 4. /etc/ansible/ansible.cfg
 
-## "hello world"
+## 3. "hello world"
 
 * Especificamos el inventorio de instancias
-* Creamos el archivo `hosts/all`
+* Creamos el archivo `hosts/all` (zape)
 
 ```ini
 [zape]
 192.168.56.11
 
-[base]
-192.168.56.12
+[zipi]
+192.168.56.10
 ```
 
-* Ejecutamos
+* Ejecutamos (zape)
 
 ```shell
-ansible zape -i hosts/all -m ping -k
+ansible zape -i hosts/all -m ping --key-file=./keys/vagrant_private_key_zape
 ```
 
 * ¿Que sucede?
-* Introducimos la contraseña del usuario ubuntu que es `e43b35d5be0112aeaa005902`.
 
-> Para obtener la contraseña:
-root# cat ~/.vagrant.d/boxes/ubuntu-VAGRANTSLASH-xenial64/20170331.0.0/virtualbox/Vagrantfile
+## 3. El playbook
 
-* ¿Que sucede?
 * Construimos nuestro primer playbook de Ansible
-* Creamos el archivo `request.yml`
+* Creamos el archivo `request.yml` (zape)
 
 ```yaml
 ---
-- hosts: base
+- hosts: zipi
 
   tasks:
     - name: que sistema eres?
@@ -97,25 +104,31 @@ root# cat ~/.vagrant.d/boxes/ubuntu-VAGRANTSLASH-xenial64/20170331.0.0/virtualbo
       debug: var=info.stdout
 ```
 
-* Cambiamos el archivo `hosts/all`
+* Cambiamos el archivo `hosts/all` (zape)
 
 ```ini
 [zape]
-192.168.56.11
+192.168.56.11 ansible_ssh_private_key_file=./keys/vagrant_private_key_zape
 
-[base]
-192.168.56.12
+[zipi]
+192.168.56.10
 
-[all:vars]
+[zipi:vars]
 ansible_connection=ssh
-ansible_ssh_user=ubuntu
-ansible_ssh_pass=e43b35d5be0112aeaa005902
+ansible_user=vagrant
+ansible_ssh_private_key_file=./keys/vagrant_private_key_zipi
 ```
 
-> Para obtener la contraseña:
-root# cat ~/.vagrant.d/boxes/ubuntu-VAGRANTSLASH-xenial64/20170331.0.0/virtualbox/Vagrantfile
+> Ansible Behavioral Inventory Parameters: http://docs.ansible.com/ansible/latest/intro_inventory.html#list-of-behavioral-inventory-parameters
 
-* Ejecutamos
+* Ejecutamos (zape)
+
+```
+ansible all -i hosts/all -m ping
+```
+
+* ¿Que sucede?
+* Ejecutamos (zape)
 
 ```
 ansible-playbook \
@@ -124,7 +137,7 @@ ansible-playbook \
 ```
 
 * ¿Que sucede?
-* Ejecutamos
+* Ejecutamos (zape)
 
 ```
 ansible-playbook \
@@ -132,13 +145,17 @@ ansible-playbook \
 ```
 
 * ¿Que sucede?
+
+## 4. Primeros cambios
+
+* Confirmamos que no existe ningun usuario `jenkins` en la VM zipi (local)
+
+```
+vagrant ssh zipi -c "sudo cat /etc/shadow | grep -i jenkins"
+```
+
 * Creamos un usuario y lo configuramos
-
-> Para crear una contraseña:
-root# mkpasswd --method=sha-512
-root# Password: jenkins123
-
-* Añadimos al archivo `request.yml`
+* Añadimos al archivo `request.yml` (zape)
 
 ```yaml
     - name: Accion "useradd -m -s /bin/bash jenkins"
@@ -160,16 +177,26 @@ root# Password: jenkins123
 
 ```
 
-* Ejecutamos
+> Para crear una contraseña:
+root# mkpasswd --method=sha-512
+root# Password: jenkins123
+
+* Ejecutamos (zape)
 
 ```
 ansible-playbook \
     -i hosts/all request.yml
 ```
 
+* Confirmamos que no existe ningun usuario `jenkins` en la VM zipi (local)
+
+```
+vagrant ssh zipi -c "sudo cat /etc/shadow | grep -i jenkins"
+```
+
 * ¿Que sucede?
 * Instalamos los paquetes necesarios para arrancar nuestro código.
-* Añadimos al archivo `request.yml`
+* Añadimos al archivo `request.yml` (zape)
 
 ```yaml
     - name: Instalamos requerimientos para RedHat based OS
@@ -202,7 +229,7 @@ ansible-playbook \
       when: ansible_os_family == "Debian"
 ```
 
-* Ejecutamos
+* Ejecutamos (zape)
 
 ```
 ansible-playbook \
@@ -210,8 +237,14 @@ ansible-playbook \
 ```
 
 * ¿Que sucede?
+
+> Mostrar facts (variables) de Ansible: `ansible zipi -i hosts/all -m setup`
+> Más sobre variables: http://docs.ansible.com/ansible/latest/playbooks_variables.html
+
+## 5. Preparamos entorno para nuestra aplicación
+
 * Instalamos nodejs para distribuciones RedHat y Debian.
-* Añadimos al archivo: `request.yml`
+* Añadimos al archivo: `request.yml` (zape)
 
 ```yaml
     - name: Download nodejs repo script
@@ -244,21 +277,21 @@ ansible-playbook \
     - "./vars_{{ ansible_os_family }}.yml"
 ```
 
-* Creamos el archivo `vars_RedHat.yml`: 
+* Creamos el archivo `vars_RedHat.yml` (zape)
 
 ```yaml
 ---
 nodejs_url: "https://rpm.nodesource.com/setup_4.x"
 ```
 
-* Creamos el archivo `vars_Debian.yml`: 
+* Creamos el archivo `vars_Debian.yml` (zape)
 
 ```yaml
 ---
 nodejs_url: "https://deb.nodesource.com/setup_4.x "
 ```
 
-* Ejecutamos
+* Ejecutamos (zape)
 
 ```
 ansible-playbook \
@@ -266,8 +299,15 @@ ansible-playbook \
 ```
 
 * ¿Que sucede?
+
+> IMPORTANTE: Ponemos la sección `vars_files` en la parte superior de `request.yml` (zape)
+
+## 6. Publicamos nuestra aplicación
+
+* Visitamos: `http://localhost:3000`
+* ¿Que sucede?
 * Descargamos el repositorio del código, instalamos dependencias y iniciamos aplicación.
-* Añadimos al archivo `request.yml`
+* Añadimos al archivo `request.yml` (zape)
 
 ```yaml
     - name: Descargamos el repositorio
@@ -291,25 +331,29 @@ ansible-playbook \
         chdir: "{{ ansible_env.HOME}}/ait"
 ```
 
-* Ejecutamos
+* Ejecutamos (zape)
 
 ```
 ansible-playbook \
     -i hosts/all request.yml
 ```
 
+* Visitamos de nuevo: `http://localhost:3000`
 * ¿Que sucede?
-* (opcional) Securizar ficheros
+
+> Código: https://github.com/xescuder/ait/tree/9abd6d6ac6533f0cb03274fb252f723373cbb1d9
+> Ver contenido `vagrant ssh zipi -c "ls ait"`. Ejecutar en terminal local.
+
+## 7. Comandos
+
+* Securizar ficheros
 
 ```shell
 ansible-vault encrypt \
     --output=SECURErequest.yml \
     request.yml
 ```
-* (opcional) ¿Que sucede?
-
-## Comandos
-
+* ¿Que sucede?
 * Los ya conocidos...
 
 ```shell
@@ -318,13 +362,15 @@ ansible-playbook playbook.yml
 ansible-vault [create|decrypt|edit|encrypt|rekey|view] [--help] [options] file_name
 ```
 
-* Otros comandos incluidos en la instalación...
+* Otros comandos interesantes...
 
 ```shell
 ansible-doc [options] [module...]
 ansible-galaxy [init|info|install|list|remove] [--help] [options] ...
 ansible-pull [options] [playbook.yml]
 ```
+
+> Public Ansible role repository: https://galaxy.ansible.com/
 
 # Preguntas y respuestas
 
