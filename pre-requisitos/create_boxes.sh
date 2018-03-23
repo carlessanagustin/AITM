@@ -18,13 +18,12 @@ vagrant package --output ../../$ZIPI zipi
 vagrant package --output ../../$ZAPE zape
 
 echo "Your boxes ready at: "
-cd ../../
-pwd
+echo $(pwd)/../../
 
 while true; do
     read -p "Delete vagrant environment? [y|n]" yn
     case $yn in
-        [Yy]* ) source clean_vagrant.sh; break;;
+        [Yy]* ) source ./clean_vagrant.sh; break;;
         [Nn]* ) exit;;
         * ) echo "Please answer yes or no.";;
     esac
