@@ -4,7 +4,7 @@ Vamos a conocer DOCKER; Docker permite empaquetar una aplicación con todas sus 
 
 Sigue las instrucciones paso a paso con la ayuda del instructor. Las prácticas de realizarán en una instancia Ubuntu de Vagrant.
 
-## Requisitos previos: Entorno local
+## 0. Requisitos previos: Entorno local
 
 * Instalar Docker - https://docs.docker.com/engine/installation/
 
@@ -20,49 +20,45 @@ vagrant up && vagrant ssh
 ![Terminales de trabajo](terminals.png)
 
 * Usaremos el terminal 1 para trabajar con contenedores Docker.
-* Usaremos el terminal 2 (T2) para monitorizar los containers con los comandos siguientes:
+* Usaremos el terminal 2 (T2) para monitorizar los containers con el comando siguiente
 
 ```shell
-T2$ docker ps
+watch docker ps -a
 ```
 
-## "hello world"
+## 1. "hello world"
 
 ```shell
-$ sudo docker run hello-world
+docker run hello-world
 ```
 
 * ¿Que sucede?
 
+## 2. ¿Que es un contenedor?
+
 ```shell
-$ docker run -it busybox
-$ ls /
-$ hostname
-$ ps aux
-T2$ docker ps -a
-$ exit
-T2$ docker images
+docker run -it busybox
+ls /
+hostname
+ps aux
+exit
+docker images
 ```
 
 * ¿Que sucede?
 * Contenedor usado: https://hub.docker.com/_/busybox/
 
-## Trabajando con contenedores
+## 3. Interactuando con contenedores
 
 ```shell
-$ c_id=$(docker run --name docker_example -itd busybox)
-$ echo $c_id
-T2$ docker ps
-$ docker attach docker_example
-$ hostname
+c_id=$(docker run --name docker_example -itd busybox)
+echo $c_id
+docker attach docker_example
+hostname
+exit
 ```
 
-* Apretamos CTRL+P+Q para volver a la VM de Vagrant (tarda un poco)
-
-```shell
-T2$ docker ps
-```
-
+* Apretamos CTRL+P & Q para volver a la VM de Vagrant
 * ¿Que sucede?
 
 ```shell
@@ -70,18 +66,20 @@ docker inspect $c_id
 docker inspect --format '{{.NetworkSettings.IPAddress}}' $c_id
 docker_hostname=$(docker inspect --format '{{.HostnamePath}}' $c_id)
 echo $docker_hostname
-sudo more $docker_folder
+sudo more $docker_hostname
 echo $c_id
 docker stop $c_id
 ```
 
 * ¿Que sucede?
 
-## Limpieza de contenedores
+## 4. Limpiar el entorno local
 
 ```shell
-T2$ docker ps -a
-T2$ docker ps -aq
+docker run --name docker_example -itd busybox
+docker ps
+docker ps -a
+docker ps -aq
 ```
 
 * ¿Que sucede?
@@ -92,21 +90,18 @@ docker rm $(docker ps -aq)
 
 * ¿Que sucede?
 
-## Composiciones Docker
+## 5. Composición docker-compose.yml + Dockerfile
 
 Compondremos un servidor de aplicaciones Python/Flask con una base de datos Redis.
 
-### Preparación del entorno
+* Preparación del entorno
 
 ```shell
 docker pull redis
 docker pull python:2.7
 docker pull tomcat
 docker pull nginx
-
 ```
-
-## Ficheros de configuración
 
 * El script de Docker Compose:
 
@@ -118,24 +113,27 @@ vim docker-compose.yml
 * Añadimos...
 
 ```yaml
-web:
-  build: .
-  command: python app.py
-  ports:
-   - "5000:5000"
-  volumes:
-   - .:/code
-  links:
-   - redis
-redis:
-  image: redis
+version: '3'
+
+services:
+  web:
+    build: .
+    command: python app.py
+    ports:
+     - "5000:5000"
+    volumes:
+     - .:/code
+    links:
+     - redis
+  redis:
+    image: redis
 ```
 
 * Salvamos y salimos con *:x*
 * El Dockerfile:
 
 ```shell
-$ vim Dockerfile
+vim Dockerfile
 ```
 
 * Añadimos...
@@ -187,17 +185,13 @@ redis
 ```
 
 * Salvamos y salimos con *:x*
-
-## Pasamos a la acción
-
-* Ejecutamos...
+* Ejecutamos la aplicación
 
 ```shell
-$ docker-compose up -d
-T2$ cd /vagrant/aitm-06_Docker
-T2$ docker-compose ps
-T2$ docker-compose logs
-$ curl localhost:5000
+docker-compose up -d
+docker-compose ps
+docker-compose logs
+curl localhost:5000
 ```
 
 * ¿Que sucede?
@@ -342,6 +336,19 @@ docker-compose rm
 
 ```
 vagrant destroy -f
+```
+
+---
+
+# Comandos útiles
+
+* Añadir en ` ~/.bashrc`
+
+```shell
+alias my_dock_kill_rm='docker kill $(docker ps -aq) ; docker rm $(docker ps -aq)'
+alias my_dock_rmi_all='docker rmi -f $(docker images -aq)'
+my_dock_teardown() { docker kill $(docker ps -aq) ; docker rm $(docker ps -aq) ; docker rmi -f $(docker images -aq) ; docker volume prune -f ; docker network prune -f ; }
+my_dock_in() { docker exec -it $1 sh ; }
 ```
 
 ---
