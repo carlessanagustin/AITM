@@ -1,11 +1,5 @@
+#!/usr/bin/env bash
 
-```shell
-sudo useradd -m -s /bin/bash jenkins
-sudo passwd jenkins
-sudo echo "jenkins ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-```
-
-```shell
 if type "yum";
 then
   echo 'RedHat based OS'
@@ -23,20 +17,13 @@ else
   echo 'Unknown OS'
   exit 1
 fi
-```
 
-```shell
 git clone https://github.com/xescuder/ait.git
 npm install jasmine
-```
 
-```shell
 cd test/unit
 ../../node_modules/jasmine/bin/jasmine.js init
 ../../node_modules/jasmine/bin/jasmine.js
-```
 
-```shell
 npm install pm2
 BUILD_ID=dontKillMe node_modules/pm2/bin/pm2 start server/start.js
-```
