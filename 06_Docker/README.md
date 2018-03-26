@@ -9,24 +9,22 @@ Sigue las instrucciones paso a paso con la ayuda del instructor. Las prácticas 
 * Instalar Docker - https://docs.docker.com/engine/installation/
 
 * Abrir Git Bash (Windows) o Terminal (Linux/MacOSX)
-* Iniciamos máquina virtual:
+* Usaremos el terminal 1 (T1) para monitorizar los containers y entorno.
+* Usaremos el terminal 2 (T2) para trabajar con contenedores Docker.
+* Iniciamos máquina virtual
 
 ```shell
-vagrant up && vagrant ssh
+T1$ vagrant up && vagrant ssh
+T1$ watch docker ps -a
+
+T2$ vagrant ssh
 ```
 
-* Abrimos otro terminal siguiendo los pasos anteriores hasta obtener algo similar:
+* Deberiamos obtener algo similar:
 
 ![Terminales de trabajo](terminals.png)
 
-* Usaremos el terminal 1 para trabajar con contenedores Docker.
-* Usaremos el terminal 2 (T2) para monitorizar los containers con el comando siguiente
-
-```shell
-watch docker ps -a
-```
-
-## 1. "hello world"
+## 1. "hello world" (T2)
 
 ```shell
 docker run hello-world
@@ -38,15 +36,16 @@ docker run hello-world
 
 ```shell
 docker run -it busybox
-ls /
-hostname
-ps aux
-exit
+  ls /
+  hostname
+  ps aux
+  exit
 docker images
 ```
 
 * ¿Que sucede?
-* Contenedor usado: https://hub.docker.com/_/busybox/
+
+> Contenedor usado: https://hub.docker.com/_/busybox/
 
 ## 3. Interactuando con contenedores
 
@@ -54,8 +53,7 @@ docker images
 c_id=$(docker run --name docker_example -itd busybox)
 echo $c_id
 docker attach docker_example
-hostname
-exit
+  hostname
 ```
 
 * Apretamos CTRL+P & Q para volver a la VM de Vagrant
@@ -99,14 +97,17 @@ Compondremos un servidor de aplicaciones Python/Flask con una base de datos Redi
 ```shell
 docker pull redis
 docker pull python:2.7
-docker pull tomcat
 docker pull nginx
 ```
+
+* La idea es hacer esta infraestructura de aplicaciones:
+
+![Docker compose structure](./docker-compose01.png)
 
 * El script de Docker Compose:
 
 ```shell
-mkdir -p /vagrant/aitm-06_Docker && cd /vagrant/aitm-06_Docker
+mkdir -p /vagrant/aitm-06_Docker/01 && cd /vagrant/aitm-06_Docker/01
 vim docker-compose.yml
 ```
 
@@ -116,6 +117,7 @@ vim docker-compose.yml
 version: '3'
 
 services:
+
   web:
     build: .
     command: python app.py
@@ -125,6 +127,7 @@ services:
      - .:/code
     links:
      - redis
+
   redis:
     image: redis
 ```
@@ -191,28 +194,33 @@ redis
 docker-compose up -d
 docker-compose ps
 docker-compose logs
-curl localhost:5000
 ```
 
 * ¿Que sucede?
+
+```shell
+curl localhost:5000
+```
+
 * Abrimos un navegador y vamos a http://127.0.0.1:5000/
 * ¿Que sucede?
 
 ```shell
-docker-compose stop
+docker-compose down
 ```
 
 * ¿Que sucede?
 
-## Composiciones avanzadas de Docker
+## 6. Composiciones avanzadas de Docker
 
-Compondremos varios servidores de aplicación Tomcat con balanceador de carga Nginx.
+La idea es hacer esta infraestructura de aplicaciones:
 
-## Ficheros de configuración
+![Docker compose structure](./docker-compose02.png)
 
 * Configuración del balanceo con Nginx:
 
 ```shell
+mkdir -p /vagrant/aitm-06_Docker/02 && cd /vagrant/aitm-06_Docker/02
 vim nginx.conf
 ```
 
@@ -241,9 +249,9 @@ http {
     # List of application servers
     upstream app_servers {
 
-        server tomcatapp1:8080;
-        server tomcatapp2:8080;
-        server tomcatapp3:8080;
+        server app1:5000;
+        server app2:5000;
+        server app3:5000;
 
     }
 
@@ -272,69 +280,152 @@ http {
 * El script de Docker Compose para Tomcat con Nginx:
 
 ```shell
-vim compose-tomcat.yml
+vim docker-compose.yml
+```
+
+* Añadimos...
+
+```yaml
+version: '3'
+
+volumes:
+  redis_data:
+
+services:
+
+  nginx:
+    image: nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+
+  app1:
+    build: .
+    restart: always
+    command: python app.py
+    expose:
+      - "5000"
+    volumes:
+      - .:/code
+
+  app2:
+    image: 02_app1
+    restart: always
+    command: python app.py
+    expose:
+      - "5000"
+    volumes:
+      - .:/code
+
+  app3:
+    image: 02_app1
+    restart: always
+    command: python app.py
+    expose:
+      - "5000"
+    volumes:
+      - .:/code
+
+  redis:
+    image: redis
+    expose:
+      - "6379"
+    volumes:
+      - "redis_data:/data"
+```
+
+* Salvamos y salimos con *:x*
+* El Dockerfile:
+
+```shell
+vim Dockerfile
+```
+
+* Añadimos...
+
+```shell
+FROM python:2.7
+ADD . /code
+WORKDIR /code
+RUN pip install -r requirements.txt
+```
+
+* Salvamos y salimos con *:x*
+* Código Python sobre entorno de Flask con conexión a Redis:
+
+```shell
+vim app.py
+```
+
+* Añadimos...
+
+```python
+from flask import Flask
+from redis import Redis
+import os, socket
+
+app = Flask(__name__)
+redis = Redis(host='redis', port=6379)
+
+@app.route('/')
+def hello():
+    redis.incr('hits')
+    return 'Hello World! I have been seen '+ str(redis.get('hits')) +' times from '+ str(socket.gethostname())
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", debug=True)
+```
+
+* Salvamos y salimos con *:x*
+* Los requerimientos mínimos de Python
+
+```shell
+vim requirements.txt
 ```
 
 * Añadimos...
 
 ```
-nginx:
-  image: nginx
-  links:
-   - tomcatapp1:tomcatapp1
-   - tomcatapp2:tomcatapp2
-   - tomcatapp3:tomcatapp3
-  ports:
-   - "80:80"
-  volumes:
-   - nginx.conf:/etc/nginx/nginx.conf
-tomcatapp1:
-  image: tomcat
-  volumes:
-   - sample.war:/usr/local/tomcat/webapps/sample.war
-tomcatapp2:
-  image: tomcat
-  volumes:
-   - sample.war:/usr/local/tomcat/webapps/sample.war
-tomcatapp3:
-  image: tomcat
-  volumes:
-   - sample.war:/usr/local/tomcat/webapps/sample.war
+flask
+redis
 ```
 
-* Salvamos y salimos con *:x*
-* Descargamos el fichero WAR de muestra
-
-```shell
-wget https://github.com/carlessanagustin/DockerDo/raw/master/08_Compose/sample.war
-```
-
-## Pasamos a la acción
+## 7. Pasamos a la acción
 
 * Ejecutamos...
 
 ```shell
-$ docker-compose up -d -f compose-tomcat.yml
-T2$ docker-compose ps
-$ docker exec composetest_nginx_1 cat /etc/hosts
-$ docker exec composetest_tomcatapp1_1 ip a
-$ docker exec composetest_tomcatapp2_1 ip a
-$ docker exec composetest_tomcatapp3_1 ip a
-$ curl http://127.0.0.1/sample/
+docker-compose up -d
+docker-compose ps
+docker network ls
+docker volume ls
 ```
 
 * ¿Que sucede?
+* Ejecutamos...
 
-# Limpiamos en entorno
+```shell
+curl http://127.0.0.1/
+```
+
+* Abrimos un navegador y vamos a http://127.0.0.1:8081/
+* ¿Que sucede?
+
+# 8. Limpiamos en entorno
 
 ```
 docker-compose stop
 docker-compose rm
 ```
 
-# Eliminamos las instancias Vagrant
+* ¿Que sucede?
+
+# 9. Eliminamos las instancias Vagrant
 
 ```
+exit
 vagrant destroy -f
 ```
 
