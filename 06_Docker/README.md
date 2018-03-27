@@ -24,7 +24,7 @@ T2$ vagrant ssh
 
 ![Terminales de trabajo](terminals.png)
 
-## 1. "hello world" (T2)
+## 1. "hello world"
 
 ```shell
 docker run hello-world
@@ -32,10 +32,10 @@ docker run hello-world
 
 * ¿Que sucede?
 
-## 2. ¿Que es un contenedor?
+## 2. Contenedores vs Imagenes
 
 ```shell
-docker run -it busybox
+docker run -it alpine
   ls /
   hostname
   ps aux
@@ -45,12 +45,12 @@ docker images
 
 * ¿Que sucede?
 
-> Contenedor usado: https://hub.docker.com/_/busybox/
+> Contenedor usado: https://hub.docker.com/_/alpine/
 
 ## 3. Interactuando con contenedores
 
 ```shell
-c_id=$(docker run --name docker_example -itd busybox)
+c_id=$(docker run --name docker_example -itd alpine)
 echo $c_id
 docker attach docker_example
   hostname
@@ -74,7 +74,7 @@ docker stop $c_id
 ## 4. Limpiar el entorno local
 
 ```shell
-docker run --name docker_example -itd busybox
+docker run --name docker_example -itd alpine
 docker ps
 docker ps -a
 docker ps -aq
@@ -95,9 +95,9 @@ Compondremos un servidor de aplicaciones Python/Flask con una base de datos Redi
 * Preparación del entorno
 
 ```shell
-docker pull redis
+docker pull redis:4.0
 docker pull python:2.7
-docker pull nginx
+docker pull nginx:1.13
 ```
 
 * La idea es hacer esta infraestructura de aplicaciones:
@@ -129,7 +129,7 @@ services:
      - redis
 
   redis:
-    image: redis
+    image: redis:4.0
 ```
 
 * Salvamos y salimos con *:x*
@@ -183,8 +183,8 @@ vim requirements.txt
 * Añadimos...
 
 ```
-flask
-redis
+Flask==0.12.2
+redis==2.10.6
 ```
 
 * Salvamos y salimos con *:x*
@@ -199,7 +199,7 @@ docker-compose logs
 * ¿Que sucede?
 
 ```shell
-curl localhost:5000
+curl 127.0.0.1:5000
 ```
 
 * Abrimos un navegador y vamos a http://127.0.0.1:5000/
@@ -294,7 +294,7 @@ volumes:
 services:
 
   nginx:
-    image: nginx
+    image: nginx:1.13
     restart: always
     ports:
       - "80:80"
@@ -329,7 +329,7 @@ services:
       - .:/code
 
   redis:
-    image: redis
+    image: redis:4.0
     expose:
       - "6379"
     volumes:
@@ -388,8 +388,8 @@ vim requirements.txt
 * Añadimos...
 
 ```
-flask
-redis
+Flask==0.12.2
+redis==2.10.6
 ```
 
 ## 7. Pasamos a la acción
