@@ -6,18 +6,14 @@ Sigue las instrucciones paso a paso con la ayuda del instructor.
 
 ## Monitorizar un host
 
-* Abrimos la carpeta **etc-nagios3** en un editor (Brackets, Sublime Text, Notepad++, ...)
-* Abrir http://localhost:8082/nagios3/ > Current Status > Hosts
-* ¿Que sucede?
 * Abrir Git Bash (Windows) o Terminal (Linux/MacOSX)
 
 ```shell
-vagrant up
-vagrant ssh zape
-sudo su -
-cd /etc/nagios3
-mkdir -p /etc/nagios3/conf.d/AITM
-vim conf.d/AITM/zape.cfg
+vagrant up && vagrant ssh zape
+  sudo su -
+  cd /etc/nagios3
+  mkdir -p /etc/nagios3/conf.d/AITM
+  vim conf.d/AITM/zape.cfg
 ```
 
 * Añadimos...
@@ -37,6 +33,28 @@ define host {
 ```
 
 * Salvamos y salimos con *:x*
+
+```shell
+vim conf.d/AITM/zipi.cfg
+```
+
+* Añadimos...
+
+```shell
+define host {
+    host_name               zipi.AITM-UPC.cat
+    alias                   zipi
+    address                 192.168.56.10
+    max_check_attempts      3
+    check_period            24x7
+    check_command           check-host-alive
+    contacts                root
+    notification_interval   60
+    notification_period     24x7
+}
+```
+
+* Salvamos y salimos con *:x*
 * Ejecutamos...
 
 ```shell
@@ -44,19 +62,18 @@ define host {
 ```
 
 * ¿Que sucede?
+* Abrir http://localhost:8082/nagios3/ > Current Status > Hosts
 * Ejecutamos...
 
 ```shell
-service nagios3 reload
+systemctl reload nagios3.service
 ```
 
-* Abrir http://localhost:8082/nagios3/ > Current Status > Hosts
 * ¿Que sucede?
 
-### NOTAS:
-
-1. Los archivos de configuración deben terminar en *.cfg
-2. Los archivos de configuración distinguen entre mayúsculas y minúsculas.
+> NOTAS:
+> 1. Los archivos de configuración deben terminar en *.cfg
+> 2. Los archivos de configuración distinguen entre mayúsculas y minúsculas.
 
 ## Servicios, contactos, agenda y notificaciones.
 
@@ -64,14 +81,14 @@ service nagios3 reload
 * ¿Que sucede?
 
 ```shell
-vim conf.d/AITM/zape.cfg
+vim conf.d/AITM/service.cfg
 ```
 
 * Añadimos...
 
 ```shell
 define service {
-    host_name              zape.AITM-UPC.cat
+    host_name              zape.AITM-UPC.cat,zipi.AITM-UPC.cat
     service_description    HTTP
     check_command          check_http
     max_check_attempts     3
@@ -112,17 +129,16 @@ define timeperiod {
 * Ejecutamos...
 
 ```shell
-service nagios3 reload
+systemctl reload nagios3.service
 ```
 
 * Abrir http://localhost:8082/nagios3/ > Current Status > Services
 * ¿Que sucede?
 
-### NOTAS:
-
-1. d,u,r == DOWN, becoming UNREACHABLE, or coming back UP.
-2. w,u,c,r == WARNING, UNKNOWN, or CRITICAL states, and also when they recover and go back to being in the OK state.
-3. notify-host-by-email >> commands.cfg
+> NOTAS:
+> 1. d,u,r == DOWN, becoming UNREACHABLE, or coming back UP.
+> 2. w,u,c,r == WARNING, UNKNOWN, or CRITICAL states, and also when they recover and go back to being in the OK state.
+> 3. notify-host-by-email >> commands.cfg
 
 ## Uso de la interfaz web
 
@@ -133,18 +149,14 @@ service nagios3 reload
 * System > Scheduling Queue
 * System > Configuration
 
-## Localización de los ficheros en Ubuntu
-
-### Para nagios3
-
-* CONFIG: /etc/nagios3
-* BIN: /usr/sbin/nagios3
-* HTDOCS & more: /usr/share/nagios3
-
-### Para nagios-nrpe-plugin
-
-* CONFIG: /etc/nagios-plugins
-* PLUGINS: /usr/lib/nagios (en Bash, Perl, Python, binarios, ...)
+> Localización de los ficheros en Ubuntu
+> * Para nagios3 server:
+> CONFIG: /etc/nagios3
+> BIN: /usr/sbin/nagios3
+> HTDOCS & more: /usr/share/nagios3
+> * Para nagios-nrpe-plugin
+> CONFIG: /etc/nagios-plugins
+> PLUGINS: /usr/lib/nagios (en Bash, Perl, Python, binarios, ...)
 
 ## Plugins (aun en zape)
 
@@ -153,7 +165,6 @@ service nagios3 reload
 ```shell
 /usr/lib/nagios/plugins/check_http -I 192.168.56.10
 /usr/lib/nagios/plugins/check_http -I 192.168.56.11
-/usr/lib/nagios/plugins/check_http -I 192.168.56.12
 ```
 
 * Abrir http://localhost:8082/nagios3/ > Current Status > Services
@@ -161,12 +172,21 @@ service nagios3 reload
 
 ```shell
 vim conf.d/localhost_nagios2.cfg
+```
+
+* Observamos
+
+```
 ...
 check_command                   check_users!20!50
 ...
-/usr/lib/nagios/plugins/check_users
-Usage:
-check_users -w <users> -c <users>
+```
+
+* Ejecutamos
+
+```shell
+/usr/lib/nagios/plugins/check_users -w 20 -c 50
+/usr/lib/nagios/plugins/check_users -w 0 -c 50
 ```
 
 * ¿Que sucede?
@@ -182,19 +202,22 @@ more /usr/lib/nagios/plugins/check_ifstatus
 ls /usr/lib/nagios/plugins
 ```
 
-* Abrimos https://nagios-plugins.org/doc/man/index.html
-* Más plugins: https://exchange.nagios.org/
+> NOTAS:
+> * Nagios Plugins: https://nagios-plugins.org/doc/man/index.html
+> * Más plugins: https://exchange.nagios.org/
+> * How To Create Nagios Plugins With Bash: https://www.digitalocean.com/community/tutorials/how-to-create-nagios-plugins-with-bash-on-ubuntu-12-10
 
 ## Habilitando la ejecución remota
 
-* En **zape**:
+* Abrir http://localhost:8082/nagios3/ > Current Status > Services
+* Observamos el servicio HTTP
 
 ```shell
-/usr/lib/nagios/plugins/check_nrpe
+/usr/lib/nagios/plugins/check_nrpe --help
 ```
 
 * ¿Que sucede?
-* Introducimos en /etc/nagios3/conf.d/AITM/zape.cfg ...
+* Introducimos en `conf.d/AITM/service.cfg`
 
 ```shell
 define service {
@@ -206,15 +229,17 @@ define service {
 ```
 
 ```shell
+sudo systemctl restart nagios3.service
 /usr/lib/nagios/plugins/check_nrpe -H 192.168.56.10 -c check_load
 ```
 
 * ¿Que sucede?
-
-* En **zipi**:
+* Ejecutamos en un terminal nuevo (zipi)
 
 ```shell
-vim /etc/nagios/nrpe.cfg
+(zipi)$ vagrant ssh zipi
+  sudo apt-get -y install nginx
+  sudo vim /etc/nagios/nrpe.cfg
 ```
 
 * Añadimos...
@@ -226,19 +251,18 @@ allowed_hosts=127.0.0.1, 192.168.56.0/24
 * Buscar y revisar: command[check_users] ...
 
 ```shell
-sudo su -
-service nagios-nrpe-server start
-/usr/lib/nagios/plugins/check_load localhost
+(zipi)$ systemctl restart nagios-nrpe-server.service
+(zipi)$ /usr/lib/nagios/plugins/check_load localhost
+
 ```
 
-* En **zape**:
+* Ejecutamos
 
 ```shell
-/usr/lib/nagios/plugins/check_nrpe -H 192.168.56.10 -c check_load
+(zape)$ /usr/lib/nagios/plugins/check_nrpe -H 192.168.56.10 -c check_load
 ```
 
 * ¿Que sucede?
-* Abrirmos https://www.digitalocean.com/community/tutorials/how-to-create-nagios-plugins-with-bash-on-ubuntu-12-10
 
 # Preguntas y respuestas
 
@@ -256,8 +280,8 @@ vagrant destroy -f
 * Solución:
 
 ```shell
-vagrant ssh zape -c "sudo service apache2 restart"
-vagrant ssh zape -c "sudo service nagios3 restart"
+vagrant ssh zape -c "sudo systemctl restart apache2.service"
+vagrant ssh zape -c "sudo systemctl restart nagios3.service"
 ```
 
 ------

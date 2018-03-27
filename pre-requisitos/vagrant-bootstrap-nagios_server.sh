@@ -2,7 +2,7 @@
 
 ########################### NAGIOS SERVER ###########################
 
-MAILNAME="zipi.com"
+MAILNAME="zape.com"
 MAILTYPE="'Internet Site'"
 PASS="nagios123"
 
@@ -27,14 +27,19 @@ service nagios3 start
 chmod g+x /var/lib/nagios3/rw
 usermod -a -G nagios www-data
 
-# add to default runlevels
-update-rc.d apache2 defaults
-update-rc.d apache2 enable 2
-update-rc.d nagios3 defaults
-update-rc.d nagios3 enable 2
+# UPSTART
+#update-rc.d apache2 defaults
+#update-rc.d apache2 enable 2
+#update-rc.d nagios3 defaults
+#update-rc.d nagios3 enable 2
+#service apache2 restart
+#service nagios3 restart
 
-service apache2 restart
-service nagios3 restart
+# SYSTEMD
+systemctl enable nagios3.service
+systemctl enable apache2.service
+systemctl restart nagios3.service
+systemctl restart apache2.service
 
 # clean up
 apt-get -y autoremove
