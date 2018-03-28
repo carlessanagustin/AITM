@@ -20,6 +20,9 @@ vagrant package --output ../../$ZAPE zape
 echo "Your boxes ready at: "
 echo $(pwd)/../../
 
+rm -Rf ../05_Nagios/etc-*
+mv -f etc-* ../05_Nagios
+
 while true; do
     read -p "Delete vagrant environment? [y|n]" yn
     case $yn in

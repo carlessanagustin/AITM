@@ -99,6 +99,7 @@ define service {
     notification_period    weekends
     contacts               myadmin
 }
+
 define contact {
     contact_name                    myadmin
     alias                           administrador de AITM
@@ -110,6 +111,7 @@ define contact {
     service_notification_options    w,u,c,r
     service_notification_period     24x7
 }
+
 define timeperiod {
     timeperiod_name  weekends
     alias            Weekends
@@ -140,38 +142,35 @@ systemctl reload nagios3.service
 > 2. w,u,c,r == WARNING, UNKNOWN, or CRITICAL states, and also when they recover and go back to being in the OK state.
 > 3. notify-host-by-email >> commands.cfg
 
-## Uso de la interfaz web
+## Plugins
 
-* Abrir http://localhost:8082/nagios3/ >>
-* Current Status > Tactical Overview
-* Reports > Availability
-* Reports > Trends
-* System > Scheduling Queue
-* System > Configuration
-
-> Localización de los ficheros en Ubuntu
-> * Para nagios3 server:
-> CONFIG: /etc/nagios3
-> BIN: /usr/sbin/nagios3
-> HTDOCS & more: /usr/share/nagios3
-> * Para nagios-nrpe-plugin
-> CONFIG: /etc/nagios-plugins
-> PLUGINS: /usr/lib/nagios (en Bash, Perl, Python, binarios, ...)
-
-## Plugins (aun en zape)
-
-* Abrir un nuevo Git Bash (Windows) o Terminal (Linux/MacOSX)
+* Abrir http://localhost:8082/nagios3/ > Current Status > Services
 
 ```shell
 /usr/lib/nagios/plugins/check_http -I 192.168.56.10
 /usr/lib/nagios/plugins/check_http -I 192.168.56.11
 ```
 
-* Abrir http://localhost:8082/nagios3/ > Current Status > Services
 * ¿Que sucede?
+* Ejecutamos en un terminal nuevo (zipi)
 
 ```shell
-vim conf.d/localhost_nagios2.cfg
+(zipi)$ vagrant ssh zipi
+  sudo apt-get -y install nginx
+```
+
+* Volvemor a ejecutar en zape
+
+```shell
+(zape)$ /usr/lib/nagios/plugins/check_http -I 192.168.56.10
+```
+
+* Revisar http://localhost:8082/nagios3/ > Current Status > Services
+* ¿Que sucede?
+* Otros plugins
+
+```shell
+(zape)$ vim conf.d/localhost_nagios2.cfg
 ```
 
 * Observamos
@@ -229,17 +228,16 @@ define service {
 ```
 
 ```shell
+/usr/sbin/nagios3 -v nagios.cfg
 sudo systemctl restart nagios3.service
 /usr/lib/nagios/plugins/check_nrpe -H 192.168.56.10 -c check_load
 ```
 
 * ¿Que sucede?
-* Ejecutamos en un terminal nuevo (zipi)
+* Ejecutamos en el terminal zipi
 
 ```shell
-(zipi)$ vagrant ssh zipi
-  sudo apt-get -y install nginx
-  sudo vim /etc/nagios/nrpe.cfg
+(zipi)$ sudo vim /etc/nagios/nrpe.cfg
 ```
 
 * Añadimos...
@@ -251,8 +249,8 @@ allowed_hosts=127.0.0.1, 192.168.56.0/24
 * Buscar y revisar: command[check_users] ...
 
 ```shell
-(zipi)$ systemctl restart nagios-nrpe-server.service
-(zipi)$ /usr/lib/nagios/plugins/check_load localhost
+(zipi)$ sudo systemctl restart nagios-nrpe-server.service
+(zipi)$ /usr/lib/nagios/plugins/check_load -w 15,10,5 -c 30,25,20
 
 ```
 
@@ -263,6 +261,26 @@ allowed_hosts=127.0.0.1, 192.168.56.0/24
 ```
 
 * ¿Que sucede?
+
+## Uso de la interfaz web
+
+* Abrir http://localhost:8082/nagios3/ >>
+* Current Status > Tactical Overview
+* Reports > Availability
+* Reports > Trends
+* System > Scheduling Queue
+* System > Configuration
+
+## Ubicaciones importantes en Ubuntu
+
+* Para nagios3 server:
+CONFIG: /etc/nagios3
+BIN: /usr/sbin/nagios3
+HTDOCS & more: /usr/share/nagios3
+
+* Para nagios-nrpe-plugin
+CONFIG: /etc/nagios-plugins
+PLUGINS: /usr/lib/nagios (en Bash, Perl, Python, binarios, ...)
 
 # Preguntas y respuestas
 
@@ -282,6 +300,7 @@ vagrant destroy -f
 ```shell
 vagrant ssh zape -c "sudo systemctl restart apache2.service"
 vagrant ssh zape -c "sudo systemctl restart nagios3.service"
+vagrant ssh zape -c "sudo systemctl restart nagios-nrpe-server.service"
 ```
 
 ------
