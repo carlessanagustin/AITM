@@ -1,17 +1,14 @@
-etc-nrpe
-etc-nagios3
-
 template.md
 *-brainstorm.md
-AITM
-*.log
+TODO.md
 
+*.log
 htpasswd.users
 *.box
 .DS_Store
 .vagrant
 
+AITM
 aitm-06_Docker
-
-TODO.md
 aitm-vagrant
+ansible
