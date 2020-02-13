@@ -1,5 +1,5 @@
+app.py
 docker-compose.yml
 Dockerfile
-app.py
-requirements.txt
 nginx.conf
+requirements.txt
