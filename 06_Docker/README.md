@@ -114,6 +114,7 @@ vim docker-compose.yml
 * Añadimos...
 
 ```yaml
+#cat <<EOF | tee docker-compose.yml
 version: '3'
 
 services:
@@ -130,6 +131,7 @@ services:
 
   redis:
     image: redis:4.0
+#EOF
 ```
 
 * Salvamos y salimos con *:x*
@@ -142,10 +144,12 @@ vim Dockerfile
 * Añadimos...
 
 ```
+#cat <<EOF | tee Dockerfile
 FROM python:2.7
 ADD . /code
 WORKDIR /code
 RUN pip install -r requirements.txt
+#EOF
 ```
 
 * Salvamos y salimos con *:x*
@@ -158,6 +162,7 @@ vim app.py
 * Añadimos...
 
 ```python
+#cat <<EOF | tee app.py
 from flask import Flask
 from redis import Redis
 import os
@@ -171,6 +176,7 @@ def hello():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
+#EOF
 ```
 
 * Salvamos y salimos con *:x*
@@ -183,8 +189,10 @@ vim requirements.txt
 * Añadimos...
 
 ```
+#cat <<EOF | tee requirements.txt
 Flask==0.12.2
 redis==2.10.6
+#EOF
 ```
 
 * Salvamos y salimos con *:x*
@@ -227,6 +235,7 @@ vim nginx.conf
 * Añadimos...
 
 ```
+#cat <<EOF | tee nginx.conf
 worker_processes 1;
 
 events { worker_connections 1024; }
@@ -274,6 +283,7 @@ http {
         }
     }
 }
+#EOF
 ```
 
 * Salvamos y salimos con *:x*
@@ -286,6 +296,7 @@ vim docker-compose.yml
 * Añadimos...
 
 ```yaml
+#cat <<EOF | tee docker-compose.yml
 version: '3'
 
 volumes:
@@ -334,6 +345,7 @@ services:
       - "6379"
     volumes:
       - "redis_data:/data"
+#EOF
 ```
 
 * Salvamos y salimos con *:x*
@@ -346,10 +358,12 @@ vim Dockerfile
 * Añadimos...
 
 ```shell
+#cat <<EOF | tee Dockerfile
 FROM python:2.7
 ADD . /code
 WORKDIR /code
 RUN pip install -r requirements.txt
+#EOF
 ```
 
 * Salvamos y salimos con *:x*
@@ -362,6 +376,7 @@ vim app.py
 * Añadimos...
 
 ```python
+#cat <<EOF | tee app.py
 from flask import Flask
 from redis import Redis
 import os, socket
@@ -376,6 +391,7 @@ def hello():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
+#EOF
 ```
 
 * Salvamos y salimos con *:x*
@@ -388,19 +404,25 @@ vim requirements.txt
 * Añadimos...
 
 ```
+#cat <<EOF | tee requirements.txt
 Flask==0.12.2
 redis==2.10.6
+#EOF
 ```
 
 ## 7. Pasamos a la acción
 
+>> ¿Es necesario limpiar el entorno?
+>> docker network prune -f ; docker volume prune -f
+
 * Ejecutamos...
 
 ```shell
-docker-compose up -d
+docker-compose up -d --force-recreate
 docker-compose ps
 docker network ls
 docker volume ls
+docker logs -f
 ```
 
 * ¿Que sucede?
